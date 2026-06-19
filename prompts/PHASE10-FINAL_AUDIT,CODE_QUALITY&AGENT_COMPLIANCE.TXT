@@ -1,0 +1,518 @@
+# PHASE 10 - FINAL AUDIT, CODE QUALITY & AGENT.md COMPLIANCE
+
+Read **AGENT.md** first and follow it STRICTLY.
+
+Follow **PHASE 0 - GLOBAL INSTRUCTIONS** before implementing anything.
+
+This is the FINAL AUDIT phase.
+
+Do NOT implement:
+
+* New Features
+* Checkout
+* Orders
+* Payment Gateway
+* Wishlist
+* Reviews
+* Notifications
+* Socket.io
+* Real-time updates
+* Any architecture changes
+
+This phase is ONLY for auditing and improving the existing implementation.
+
+---
+
+## Objective
+
+Perform a complete audit of the project and ensure:
+
+* Full AGENT.md compliance
+* Clean folder structure
+* Consistent UI
+* Readable code
+* Stable dependencies
+* No dead code
+* No duplicate logic
+* Production-ready quality
+
+---
+
+# AGENT.md Compliance Review
+
+Review every module:
+
+* Authentication
+* Product Module
+* Cart Module
+* Admin Dashboard
+* Middleware
+* Redux Store
+* UI Components
+
+Verify:
+
+* AGENT.md rules are followed.
+* No unauthorized libraries are introduced.
+* No experimental APIs are used.
+* No unnecessary abstractions exist.
+
+---
+
+# Folder Structure Audit
+
+Verify:
+
+```txt
+src/
+
+app/
+
+components/
+
+components/ui/
+
+lib/
+
+models/
+
+store/
+
+schemas/
+
+hooks/
+
+utils/
+
+middleware.ts
+```
+
+Remove:
+
+* Unused folders
+* Duplicate folders
+* Temporary files
+
+Do NOT create:
+
+```txt
+helpers2/
+
+common/
+
+shared/
+
+random/
+
+misc/
+```
+
+unless approved.
+
+---
+
+# Component Audit
+
+Review:
+
+* Navbar
+* ProductCard
+* ProductGrid
+* CartDrawer
+* CartItem
+* CartSummary
+* AdminSidebar
+* AdminHeader
+* StatsCard
+
+Verify:
+
+* Reusable only if necessary
+* No overengineering
+* Small and readable
+* Clear props
+* No duplicated UI
+
+---
+
+# Redux Audit
+
+Review:
+
+```txt
+authSlice
+
+productSlice
+
+cartSlice
+```
+
+Verify:
+
+* Proper state naming
+* Minimal state
+* No duplicate state
+* No unnecessary reducers
+* Proper async thunks
+
+Remove:
+
+* Dead actions
+* Unused selectors
+
+---
+
+# API Audit
+
+Review:
+
+```txt
+/ api/auth
+
+/ api/products
+
+/ api/cart
+
+/ api/users
+
+/ api/admin/stats
+```
+
+Verify:
+
+* REST conventions followed
+* Correct status codes
+* Consistent response format
+
+Response:
+
+```json
+{
+"success": true,
+"message": "",
+"data": {}
+}
+```
+
+Error:
+
+```json
+{
+"success": false,
+"message": ""
+}
+```
+
+---
+
+# Database Audit
+
+Review:
+
+* User Model
+* Product Model
+* Cart Model
+
+Verify:
+
+* Proper types
+* Required fields
+* Timestamps
+* Unique constraints
+
+Ensure:
+
+* Single MongoDB connection
+* No duplicate mongoose connections
+
+---
+
+# Security Audit
+
+Verify:
+
+✓ Password Hashing
+
+✓ bcryptjs
+
+✓ JWT Signature Verification
+
+✓ JWT Expiration
+
+✓ httpOnly Cookies
+
+✓ secure cookie in production
+
+✓ sameSite configured
+
+✓ Role Based Authorization
+
+✓ Protected Admin Routes
+
+✓ Protected APIs
+
+---
+
+Never:
+
+* Store passwords in plain text
+
+* Store JWT in localStorage
+
+* Expose secrets
+
+---
+
+# UI Consistency Audit
+
+Review:
+
+* Colors
+* Typography
+* Buttons
+* Forms
+* Cards
+* Tables
+* Dialogs
+
+Verify:
+
+All colors come from:
+
+```txt
+globals.css
+```
+
+Avoid:
+
+```txt
+bg-[#...]
+
+text-[#...]
+
+border-[#...]
+```
+
+scattered throughout the project.
+
+---
+
+# Responsive Audit
+
+Verify:
+
+Mobile
+
+Tablet
+
+Desktop
+
+Review:
+
+* Navbar
+* Product Grid
+* Product Details
+* Cart Drawer
+* Admin Dashboard
+* Tables
+* Forms
+
+---
+
+# Loading States Audit
+
+Verify:
+
+* Product Loading
+* Product Detail Loading
+* Cart Loading
+* Users Loading
+* Dashboard Loading
+
+Use:
+
+```txt
+Shadcn Skeleton
+```
+
+Remove:
+
+* Inconsistent spinners
+* Random loading UIs
+
+---
+
+# Error Handling Audit
+
+Verify:
+
+```ts
+try{
+
+}catch(error){
+
+}
+```
+
+Check:
+
+* Authentication Errors
+
+* API Errors
+
+* 401
+
+* 403
+
+* 404
+
+* 500
+
+Display:
+
+Friendly messages only.
+
+Do NOT expose:
+
+* Stack traces
+
+* Database errors
+
+* Internal implementation details
+
+---
+
+# TypeScript Audit
+
+Verify:
+
+* No any
+
+* Proper interfaces
+
+* Proper types
+
+* Explicit return types
+
+Prefer:
+
+```ts
+interface
+
+type
+```
+
+Remove:
+
+```ts
+any
+```
+
+unless absolutely necessary.
+
+---
+
+# Dependency Audit
+
+Review:
+
+```txt
+package.json
+```
+
+Verify:
+
+* Stable packages only
+
+* Compatible versions only
+
+* No deprecated packages
+
+Remove:
+
+* Unused packages
+
+* Duplicate packages
+
+* Experimental packages
+
+---
+
+# Code Cleanup
+
+Remove:
+
+* Console logs
+
+* Dead code
+
+* Unused imports
+
+* Commented code
+
+* Duplicate functions
+
+Do NOT:
+
+* Rewrite working code
+
+* Change architecture
+
+* Introduce abstractions
+
+---
+
+# Final Verification Checklist
+
+Verify:
+
+✓ Authentication Works
+
+✓ JWT Cookies Work
+
+✓ Product CRUD Works
+
+✓ Product UI Works
+
+✓ Cart Works
+
+✓ Admin Dashboard Works
+
+✓ Middleware Works
+
+✓ Responsive UI Works
+
+✓ Loading States Work
+
+✓ Error States Work
+
+✓ Empty States Work
+
+✓ AGENT.md Rules Followed
+
+✓ Clean Architecture
+
+✓ Production Ready
+
+---
+
+# Final Rule
+
+Do NOT add anything extra.
+
+Do NOT invent features.
+
+Do NOT improve architecture without permission.
+
+If any issue requires architectural change:
+
+Explain:
+
+* Why
+* Advantages
+* Disadvantages
+* Impact
+
+Ask the user before changing.
+
+AGENT.md remains the highest priority document throughout this phase.

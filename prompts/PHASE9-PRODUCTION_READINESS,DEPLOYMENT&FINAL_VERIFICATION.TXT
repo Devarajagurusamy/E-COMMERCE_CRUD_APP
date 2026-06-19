@@ -1,0 +1,621 @@
+# PHASE 9 - PRODUCTION READINESS, DEPLOYMENT & FINAL VERIFICATION
+
+Read **AGENT.md** first and follow it STRICTLY.
+
+Follow **PHASE 0 - GLOBAL INSTRUCTIONS** before implementing anything.
+
+This is the FINAL phase.
+
+Do NOT implement:
+
+* New Features
+* Checkout
+* Orders
+* Payment Gateway
+* Wishlist
+* Reviews
+* Notifications
+* Socket.io
+* Real-time updates
+
+Only prepare the application for production deployment and final verification.
+
+---
+
+## Objective
+
+Prepare the application for:
+
+* Production Deployment
+* Environment Configuration
+* Security Review
+* Performance Review
+* Final Code Cleanup
+* README Documentation
+* Final End-to-End Verification
+
+---
+
+# Deployment Target
+
+Deploy:
+
+Frontend + Backend
+
+Using:
+
+```txt
+Vercel
+```
+
+Database:
+
+```txt
+MongoDB Atlas
+```
+
+Use the existing architecture.
+
+Do NOT:
+
+* Change frameworks
+* Change database
+* Change authentication flow
+* Change API structure
+
+---
+
+# Environment Variables
+
+Verify:
+
+```env
+MONGODB_URI=
+
+JWT_SECRET=
+
+NEXT_PUBLIC_API_URL=
+```
+
+Requirements:
+
+* Use .env.local for local development.
+* Use Vercel Environment Variables for production.
+* Never hardcode secrets.
+* Never expose secrets to the frontend.
+
+---
+
+# Production Environment Review
+
+Verify:
+
+* MongoDB Atlas connection works.
+* JWT Secret is configured.
+* API URLs are correct.
+* Cookies work in production.
+* Secure cookie option enabled in production.
+* sameSite configured correctly.
+
+---
+
+# Authentication Verification
+
+Test:
+
+User Registration
+
+✓ Register new user
+
+✓ Prevent duplicate email
+
+✓ Password hashing
+
+---
+
+User Login
+
+✓ Login successfully
+
+✓ Invalid credentials handled
+
+✓ JWT created
+
+✓ Cookie stored
+
+---
+
+User Logout
+
+✓ Cookie removed
+
+✓ Session cleared
+
+---
+
+Current User
+
+✓ Get authenticated user
+
+✓ Reject invalid tokens
+
+---
+
+# Product Module Verification
+
+Verify:
+
+✓ Get All Products
+
+✓ Get Product By ID
+
+✓ Create Product
+
+✓ Update Product
+
+✓ Delete Product
+
+---
+
+Verify:
+
+Admin only:
+
+```txt
+POST /api/products
+
+PUT /api/products/[id]
+
+DELETE /api/products/[id]
+```
+
+---
+
+Public:
+
+```txt
+GET /api/products
+
+GET /api/products/[id]
+```
+
+---
+
+# Cart Verification
+
+Verify:
+
+✓ Add To Cart
+
+✓ Remove From Cart
+
+✓ Update Quantity
+
+✓ Get Cart
+
+✓ Total Price Calculation
+
+✓ Stock Validation
+
+---
+
+Reject:
+
+```txt
+Unauthenticated users
+```
+
+---
+
+# Admin Dashboard Verification
+
+Verify:
+
+✓ Dashboard Stats
+
+✓ Product Management
+
+✓ User Management
+
+✓ Search Products
+
+✓ Add Product
+
+✓ Edit Product
+
+✓ Delete Product
+
+---
+
+Verify:
+
+```txt
+role === "admin"
+```
+
+only.
+
+---
+
+# Middleware Verification
+
+Verify:
+
+Protected:
+
+```txt
+/cart
+
+/admin/*
+```
+
+---
+
+Public:
+
+```txt
+/
+
+/login
+
+/register
+
+/products
+
+/products/[id]
+```
+
+---
+
+Verify:
+
+* JWT validation
+* Invalid token rejection
+* Role based authorization
+* Redirect behavior
+
+---
+
+# Responsive Design Verification
+
+Test:
+
+Mobile
+
+Tablet
+
+Desktop
+
+---
+
+Verify:
+
+```txt
+Navbar
+
+Products Page
+
+Product Detail
+
+Cart
+
+Admin Dashboard
+
+Tables
+
+Dialogs
+
+Forms
+```
+
+---
+
+# Loading States Verification
+
+Verify:
+
+```txt
+Products Loading
+
+Cart Loading
+
+Users Loading
+
+Dashboard Loading
+```
+
+Use:
+
+```txt
+Shadcn Skeleton
+```
+
+---
+
+# Error States Verification
+
+Verify:
+
+```txt
+404
+
+401
+
+403
+
+500
+
+Empty Products
+
+Empty Cart
+
+Empty Users
+```
+
+Show friendly messages.
+
+Do NOT expose:
+
+* Stack traces
+
+* Database errors
+
+* Internal server errors
+
+---
+
+# Performance Review
+
+Review:
+
+* Unnecessary re-renders
+
+* Large client components
+
+* Duplicate API calls
+
+* Unused imports
+
+* Unused states
+
+* Unused components
+
+---
+
+Prefer:
+
+```txt
+Server Components
+
+Small Client Components
+
+Reusable Components
+
+Simple Architecture
+```
+
+Follow AGENT.md.
+
+---
+
+# Code Cleanup
+
+Remove:
+
+* Console logs
+
+* Dead code
+
+* Unused imports
+
+* Unused variables
+
+* Duplicate code
+
+---
+
+Do NOT:
+
+* Refactor architecture
+
+* Rewrite working code
+
+* Introduce abstractions
+
+---
+
+# README
+
+Create:
+
+```txt
+README.md
+```
+
+Include:
+
+### Project Name
+
+### Features
+
+* JWT Authentication
+
+* Product CRUD
+
+* Cart
+
+* Admin Dashboard
+
+* Middleware
+
+---
+
+### Tech Stack
+
+```txt
+Next.js 15
+
+React 19
+
+TypeScript
+
+Tailwind CSS v4
+
+Shadcn UI
+
+Redux Toolkit
+
+MongoDB Atlas
+
+Mongoose
+
+JWT
+
+bcryptjs
+```
+
+---
+
+### Installation
+
+```bash
+npm install
+
+npm run dev
+```
+
+---
+
+### Environment Variables
+
+```env
+MONGODB_URI=
+
+JWT_SECRET=
+
+NEXT_PUBLIC_API_URL=
+```
+
+---
+
+### Deployment
+
+```txt
+Vercel
+
+MongoDB Atlas
+```
+
+---
+
+### AI Usage
+
+Mention:
+
+AI was used for:
+
+* Tailwind generation
+
+* API integration assistance
+
+* Error debugging
+
+* Code optimization
+
+As required in AGENT.md.
+
+---
+
+# Security Checklist
+
+Verify:
+
+✓ Password Hashing
+
+✓ JWT Authentication
+
+✓ httpOnly Cookies
+
+✓ Secure Cookies
+
+✓ Role Authorization
+
+✓ Protected APIs
+
+✓ Protected Routes
+
+✓ Environment Variables
+
+---
+
+# Final Acceptance Criteria
+
+The application should have:
+
+✓ JWT Authentication
+
+✓ User Registration/Login
+
+✓ Product CRUD
+
+✓ User Product Pages
+
+✓ Cart Functionality
+
+✓ Admin Dashboard
+
+✓ Middleware Protection
+
+✓ Responsive Design
+
+✓ Loading States
+
+✓ Error Handling
+
+✓ Clean Architecture
+
+✓ Production Ready Code
+
+✓ Deployment Ready
+
+---
+
+# Things STRICTLY NOT TO DO
+
+Do NOT implement:
+
+* Checkout
+
+* Orders
+
+* Payment Gateway
+
+* Wishlist
+
+* Reviews
+
+* Notifications
+
+* Socket.io
+
+* Real-time updates
+
+* Any new feature
+
+This phase is ONLY for:
+
+Production Readiness
+
+Deployment
+
+Documentation
+
+Final Verification
+
+---
+
+If any requirement is unclear:
+
+Ask the user before implementation.
+
+Never assume.

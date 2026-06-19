@@ -1,0 +1,828 @@
+# PHASE 6 - ADMIN DASHBOARD
+
+Read **AGENT.md** first and follow it STRICTLY.
+
+Follow **PHASE 0 - GLOBAL INSTRUCTIONS** before implementing anything.
+
+Use:
+
+* Authentication Module from Phase 2
+* Product Module from Phase 3 & 4
+* Cart Module from Phase 5
+
+This phase is ONLY for the Admin Dashboard.
+
+Do NOT implement:
+
+* Orders
+* Payment Gateway
+* Analytics Charts
+* Export CSV/PDF
+* Notifications
+* Real-time updates
+* Socket.io
+
+Implement Admin Dashboard only.
+
+---
+
+## Objective
+
+Build a secure Admin Dashboard where only admin users can:
+
+* View dashboard statistics
+* View all products
+* Search products
+* Add products
+* Edit products
+* Delete products
+* View registered users
+
+---
+
+# Access Control
+
+ONLY:
+
+```txt
+role === "admin"
+```
+
+can access:
+
+```txt
+/ admin/*
+```
+
+If:
+
+```txt
+role !== "admin"
+```
+
+Return:
+
+```txt
+403 Forbidden
+```
+
+Or redirect:
+
+```txt
+/
+```
+
+---
+
+# Routes
+
+Create:
+
+```txt
+app/
+
+admin/
+
+dashboard/
+
+page.tsx
+
+
+admin/products/
+
+page.tsx
+
+
+admin/users/
+
+page.tsx
+```
+
+---
+
+# Dashboard Home
+
+Route:
+
+```txt
+/admin/dashboard
+```
+
+Display:
+
+```txt
+Total Users
+
+Total Products
+
+Total Cart Items
+```
+
+Example:
+
+```txt
+Users          120
+
+Products       65
+
+Cart Items     210
+```
+
+---
+
+# Statistics API
+
+Create:
+
+```txt
+GET /api/admin/stats
+```
+
+Return:
+
+```json
+{
+
+success:true,
+
+data:{
+
+totalUsers:120,
+
+totalProducts:65,
+
+totalCartItems:210
+
+}
+
+}
+```
+
+Use:
+
+```txt
+MongoDB Aggregation
+
+or
+
+Count Documents
+```
+
+Prefer:
+
+Simple implementation.
+
+---
+
+# Product Management Page
+
+Route:
+
+```txt
+/admin/products
+```
+
+Display:
+
+```txt
+Search Bar
+
+Products Table
+
+Add Product Button
+
+Edit Button
+
+Delete Button
+```
+
+---
+
+# Products Table
+
+Columns:
+
+```txt
+Image
+
+Title
+
+Price
+
+Discount
+
+Brand
+
+Stock
+
+Created Date
+
+Actions
+```
+
+Actions:
+
+```txt
+Edit
+
+Delete
+```
+
+Use:
+
+```txt
+Shadcn Table
+```
+
+---
+
+# Search Products
+
+Create:
+
+```txt
+Search Bar
+```
+
+Requirements:
+
+Search by:
+
+```txt
+Title
+
+Brand
+
+Cloth Type
+```
+
+Simple:
+
+```txt
+Case insensitive search
+```
+
+No:
+
+```txt
+Autocomplete
+
+Debouncing
+
+Elastic Search
+```
+
+Keep it simple.
+
+---
+
+# Add Product Dialog
+
+Use:
+
+```txt
+Shadcn Dialog
+```
+
+Fields:
+
+```txt
+Title
+
+Description
+
+Price
+
+Discount
+
+Cloth Type
+
+Brand
+
+Size
+
+Color
+
+Stock
+
+Image URL
+```
+
+Submit:
+
+```txt
+POST /api/products
+```
+
+---
+
+# Edit Product Dialog
+
+Use:
+
+```txt
+PUT /api/products/[id]
+```
+
+Pre-fill:
+
+```txt
+Existing Product Data
+```
+
+Allow updating:
+
+```txt
+Title
+
+Description
+
+Price
+
+Discount
+
+Brand
+
+Cloth Type
+
+Size
+
+Color
+
+Stock
+
+Image URL
+```
+
+---
+
+# Delete Product
+
+Use:
+
+```txt
+DELETE /api/products/[id]
+```
+
+Before deleting:
+
+Show:
+
+```txt
+Confirmation Dialog
+```
+
+Example:
+
+```txt
+Are you sure you want to delete this product?
+```
+
+---
+
+# Users Management Page
+
+Route:
+
+```txt
+/admin/users
+```
+
+Display:
+
+```txt
+Name
+
+Email
+
+Role
+
+Created Date
+```
+
+Fetch:
+
+```txt
+GET /api/users
+```
+
+---
+
+# Users API
+
+Create:
+
+```txt
+GET /api/users
+```
+
+Access:
+
+```txt
+Admin only
+```
+
+Return:
+
+```json
+{
+
+success:true,
+
+data:[
+
+{
+
+id,
+
+name,
+
+email,
+
+role,
+
+createdAt
+
+}
+
+]
+
+}
+```
+
+Never return:
+
+```txt
+password
+```
+
+---
+
+# Admin Layout
+
+Create:
+
+```txt
+components/
+
+AdminSidebar.tsx
+
+AdminHeader.tsx
+
+StatsCard.tsx
+```
+
+---
+
+# Sidebar
+
+Menu:
+
+```txt
+Dashboard
+
+Products
+
+Users
+```
+
+Show:
+
+```txt
+Logout Button
+```
+
+Use:
+
+```txt
+Shadcn Button
+```
+
+---
+
+# Header
+
+Display:
+
+```txt
+Page Title
+
+Admin Name
+
+Logout Button
+```
+
+---
+
+# Stats Card
+
+Display:
+
+```txt
+Title
+
+Count
+
+Optional Icon
+```
+
+Example:
+
+```txt
+Total Products
+
+65
+```
+
+---
+
+# Redux
+
+Use:
+
+```txt
+productSlice
+
+authSlice
+```
+
+Create if required:
+
+```txt
+adminSlice
+```
+
+State:
+
+```ts
+{
+
+loading,
+
+error,
+
+stats,
+
+users
+
+}
+```
+
+---
+
+# Loading State
+
+Use:
+
+```txt
+Shadcn Skeleton
+```
+
+While:
+
+```txt
+Loading stats
+
+Loading users
+
+Loading products
+```
+
+---
+
+# Empty State
+
+Products:
+
+```txt
+No Products Found
+```
+
+Users:
+
+```txt
+No Users Found
+```
+
+---
+
+# Images
+
+Display:
+
+```ts
+image:"https://..."
+```
+
+Use:
+
+```txt
+next/image
+```
+
+If placeholders are needed:
+
+Use:
+
+```txt
+https://images.unsplash.com/
+
+https://picsum.photos/
+
+https://placehold.co/
+```
+
+Do NOT:
+
+* Upload images
+
+* Store image files
+
+* Use Multer
+
+---
+
+# Styling Rules
+
+Use:
+
+```txt
+Tailwind CSS
+
+Shadcn UI
+```
+
+Follow:
+
+```txt
+globals.css
+```
+
+Use:
+
+```txt
+.page-container
+
+.card-container
+
+.btn-primary
+```
+
+Maintain:
+
+* Consistent spacing
+* Consistent typography
+* Consistent shadows
+* Consistent colors
+
+---
+
+# Responsive Rules
+
+Support:
+
+```txt
+Mobile
+
+Tablet
+
+Desktop
+```
+
+Sidebar:
+
+```txt
+Desktop -> Fixed Sidebar
+
+Mobile -> Drawer / Sheet
+```
+
+Dashboard Cards:
+
+```txt
+Mobile -> 1 Column
+
+Tablet -> 2 Columns
+
+Desktop -> 3 Columns
+```
+
+---
+
+# Error Handling
+
+Always:
+
+```ts
+try{
+
+}catch(error){
+
+}
+```
+
+Return:
+
+```json
+{
+
+success:false,
+
+message:"Error message"
+
+}
+```
+
+Status Codes:
+
+```txt
+200
+
+201
+
+400
+
+401
+
+403
+
+404
+
+500
+```
+
+---
+
+# Things STRICTLY NOT TO DO
+
+Do NOT implement:
+
+* Orders
+
+* Payments
+
+* Analytics Charts
+
+* Graphs
+
+* Export CSV
+
+* Export PDF
+
+* Notifications
+
+* Socket.io
+
+* Real-time dashboard
+
+* Activity logs
+
+Implement ONLY:
+
+Admin Dashboard
+
+Admin Products Page
+
+Admin Users Page
+
+Statistics
+
+Product Management
+
+User Management
+
+---
+
+# Expected Output
+
+After Phase 6:
+
+✓ Admin Protected Routes
+
+✓ Admin Dashboard
+
+✓ Statistics API
+
+✓ Products Management Page
+
+✓ Add Product Dialog
+
+✓ Edit Product Dialog
+
+✓ Delete Product
+
+✓ Users Management Page
+
+✓ Admin Sidebar
+
+✓ Admin Header
+
+✓ Responsive Admin UI
+
+✓ Production Ready Admin Dashboard
+
+If any requirement is unclear:
+
+Ask the user before implementation.
+
+Never assume.
