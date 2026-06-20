@@ -1,9 +1,10 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams, useRouter } from "next/navigation";
 import { fetchProductById } from "@/lib/store/slices/productSlice";
+import { addToCart } from "@/lib/store/slices/cartSlice";
 import { AppDispatch, RootState } from "@/lib/store";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -18,6 +19,9 @@ export default function ProductDetailPage() {
   const { selectedProduct: product, loading, error } = useSelector(
     (state: RootState) => state.products
   );
+  const { isAuthenticated } = useSelector((state: RootState) => state.auth);
+  const { loading: cartLoading } = useSelector((state: RootState) => state.cart);
+  const [localLoading, setLocalLoading] = useState(false);
 
   const productId = params.id as string;
 
@@ -32,6 +36,22 @@ export default function ProductDetailPage() {
     : product?.price;
 
   const inStock = (product?.stock || 0) > 0;
+
+  const handleAddToCart = async () => {
+    if (!isAuthenticated) {
+      router.push("/login");
+      return;
+    }
+
+    setLocalLoading(true);
+    try {
+      await dispatch(addToCart({ productId: product!._id, quantity: 1 })).unwrap();
+    } catch (error) {
+      console.error("Error adding to cart:", error);
+    } finally {
+      setLocalLoading(false);
+    }
+  };
 
   // Loading State
   if (loading) {
@@ -178,11 +198,12 @@ export default function ProductDetailPage() {
           <div className="flex gap-3 pt-4">
             <Button
               size="lg"
-              disabled={!inStock}
+              disabled={!inStock || cartLoading || localLoading}
               className="flex-1"
               variant="default"
+              onClick={handleAddToCart}
             >
-              {inStock ? "Add to Cart" : "Unavailable"}
+              {localLoading ? "Adding..." : inStock ? "Add to Cart" : "Unavailable"}
             </Button>
             <Link href="/products" className="flex-1">
               <Button size="lg" variant="outline" className="w-full">

@@ -1,6 +1,11 @@
 "use client";
 
+import { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { useRouter } from "next/navigation";
 import { Product } from "@/lib/store/slices/productSlice";
+import { addToCart } from "@/lib/store/slices/cartSlice";
+import { AppDispatch, RootState } from "@/lib/store";
 import { Card, CardContent, CardDescription, CardHeader } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
@@ -11,11 +16,35 @@ interface ProductCardProps {
 }
 
 export default function ProductCard({ product }: ProductCardProps) {
+    const dispatch = useDispatch<AppDispatch>();
+    const router = useRouter();
+    const { isAuthenticated } = useSelector((state: RootState) => state.auth);
+    const { loading } = useSelector((state: RootState) => state.cart);
+    const [localLoading, setLocalLoading] = useState(false);
+
     const finalPrice = product.discount
         ? Math.round(product.price * (1 - product.discount / 100))
         : product.price;
 
     const inStock = product.stock > 0;
+
+    const handleAddToCart = async () => {
+        if (!isAuthenticated) {
+            router.push("/login");
+            return;
+        }
+
+        setLocalLoading(true);
+        try {
+            await dispatch(
+                addToCart({ productId: product._id, quantity: 1 })
+            ).unwrap();
+        } catch (error) {
+            console.error("Error adding to cart:", error);
+        } finally {
+            setLocalLoading(false);
+        }
+    };
 
     return (
         <Card className="h-full flex flex-col overflow-hidden hover:shadow-lg transition-shadow">
@@ -88,10 +117,11 @@ export default function ProductCard({ product }: ProductCardProps) {
                     <Button
                         variant="default"
                         size="sm"
-                        disabled={!inStock}
+                        disabled={!inStock || loading || localLoading}
                         className="flex-1"
+                        onClick={handleAddToCart}
                     >
-                        {inStock ? "Add to Cart" : "Unavailable"}
+                        {localLoading ? "Adding..." : inStock ? "Add to Cart" : "Unavailable"}
                     </Button>
                 </div>
             </CardContent>
