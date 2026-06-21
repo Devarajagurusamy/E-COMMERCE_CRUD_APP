@@ -11,12 +11,11 @@ import axios from "axios";
 export default function AddProductPage() {
     const router = useRouter();
 
+    const dispatch = useDispatch<any>();
+
     useEffect(() => {
-
         const checkAdmin = async () => {
-
             try {
-
                 const res = await axios.get("/api/auth/me");
 
                 if (!res.data.success) {
@@ -27,20 +26,13 @@ export default function AddProductPage() {
                 if (res.data.user.role !== "admin") {
                     router.push("/");
                 }
-
             } catch {
-
                 router.push("/login");
-
             }
-
         };
 
         checkAdmin();
-
     }, [router]);
-
-    const dispatch = useDispatch<any>();
 
     const [formData, setFormData] = useState({
         title: "",
@@ -91,117 +83,217 @@ export default function AddProductPage() {
     return (
         <main className="max-w-3xl mx-auto px-6 py-10">
 
-            <h1 className="text-4xl font-bold mb-8">
+            <h1 className="text-5xl font-bold mb-10">
                 Add Product
             </h1>
 
             <form
                 onSubmit={handleSubmit}
-                className="space-y-4"
+                className="space-y-6"
             >
 
-                <input
-                    type="text"
-                    name="title"
-                    placeholder="Title"
-                    value={formData.title}
-                    onChange={handleChange}
-                    className="w-full border rounded p-3"
-                    required
-                />
+                {/* Title */}
 
-                <textarea
-                    name="description"
-                    placeholder="Description"
-                    value={formData.description}
-                    onChange={handleChange}
-                    className="w-full border rounded p-3"
-                    rows={4}
-                    required
-                />
+                <div>
+                    <label className="block mb-2 text-sm font-medium text-stone-300">
+                        Product Title
+                    </label>
 
-                <input
-                    type="number"
-                    name="price"
-                    placeholder="Price"
-                    value={formData.price}
-                    onChange={handleChange}
-                    className="w-full border rounded p-3"
-                    required
-                />
+                    <input
+                        type="text"
+                        name="title"
+                        placeholder="Enter product title"
+                        value={formData.title}
+                        onChange={handleChange}
+                        className="w-full rounded-lg border border-stone-800 bg-black px-4 py-3 text-white placeholder:text-stone-500 outline-none focus:border-white transition"
+                        required
+                    />
+                </div>
 
-                <input
-                    type="number"
-                    name="discount"
-                    placeholder="Discount"
-                    value={formData.discount}
-                    onChange={handleChange}
-                    className="w-full border rounded p-3"
-                />
+                {/* Description */}
 
-                <input
-                    type="text"
-                    name="clothType"
-                    placeholder="Cloth Type"
-                    value={formData.clothType}
-                    onChange={handleChange}
-                    className="w-full border rounded p-3"
-                    required
-                />
+                <div>
+                    <label className="block mb-2 text-sm font-medium text-stone-300">
+                        Description
+                    </label>
 
-                <input
-                    type="text"
-                    name="brand"
-                    placeholder="Brand"
-                    value={formData.brand}
-                    onChange={handleChange}
-                    className="w-full border rounded p-3"
-                    required
-                />
+                    <textarea
+                        name="description"
+                        placeholder="Write product description..."
+                        value={formData.description}
+                        onChange={handleChange}
+                        rows={5}
+                        className="w-full rounded-lg border border-stone-800 bg-black px-4 py-3 text-white placeholder:text-stone-500 outline-none focus:border-white transition resize-none"
+                        required
+                    />
+                </div>
 
-                <input
-                    type="text"
-                    name="size"
-                    placeholder="Size"
-                    value={formData.size}
-                    onChange={handleChange}
-                    className="w-full border rounded p-3"
-                    required
-                />
+                {/* Price & Discount */}
 
-                <input
-                    type="text"
-                    name="color"
-                    placeholder="Color"
-                    value={formData.color}
-                    onChange={handleChange}
-                    className="w-full border rounded p-3"
-                    required
-                />
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
 
-                <input
-                    type="number"
-                    name="stock"
-                    placeholder="Stock"
-                    value={formData.stock}
-                    onChange={handleChange}
-                    className="w-full border rounded p-3"
-                    required
-                />
+                    <div>
+                        <label className="block mb-2 text-sm font-medium text-stone-300">
+                            Price
+                        </label>
 
-                <input
-                    type="text"
-                    name="image"
-                    placeholder="Image URL"
-                    value={formData.image}
-                    onChange={handleChange}
-                    className="w-full border rounded p-3"
-                    required
-                />
+                        <input
+                            type="number"
+                            name="price"
+                            placeholder="Enter product price"
+                            value={formData.price}
+                            onChange={handleChange}
+                            className="w-full rounded-lg border border-stone-800 bg-black px-4 py-3 text-white placeholder:text-stone-500 outline-none focus:border-white transition"
+                            required
+                        />
+                    </div>
+
+                    <div>
+                        <label className="block mb-2 text-sm font-medium text-stone-300">
+                            Discount (%)
+                        </label>
+
+                        <input
+                            type="number"
+                            name="discount"
+                            placeholder="Example: 10"
+                            value={formData.discount}
+                            onChange={handleChange}
+                            className="w-full rounded-lg border border-stone-800 bg-black px-4 py-3 text-white placeholder:text-stone-500 outline-none focus:border-white transition"
+                        />
+                    </div>
+
+                </div>
+
+                {/* Cloth Type */}
+
+                <div>
+                    <label className="block mb-2 text-sm font-medium text-stone-300">
+                        Cloth Type
+                    </label>
+
+                    <input
+                        type="text"
+                        name="clothType"
+                        placeholder="T-Shirt, Shirt, Hoodie..."
+                        value={formData.clothType}
+                        onChange={handleChange}
+                        className="w-full rounded-lg border border-stone-800 bg-black px-4 py-3 text-white placeholder:text-stone-500 outline-none focus:border-white transition"
+                        required
+                    />
+                </div>
+
+                {/* Brand */}
+
+                <div>
+                    <label className="block mb-2 text-sm font-medium text-stone-300">
+                        Brand
+                    </label>
+
+                    <input
+                        type="text"
+                        name="brand"
+                        placeholder="Enter brand name"
+                        value={formData.brand}
+                        onChange={handleChange}
+                        className="w-full rounded-lg border border-stone-800 bg-black px-4 py-3 text-white placeholder:text-stone-500 outline-none focus:border-white transition"
+                        required
+                    />
+                </div>
+
+                {/* Size & Color */}
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+                    <div>
+                        <label className="block mb-2 text-sm font-medium text-stone-300">
+                            Size
+                        </label>
+
+                        <input
+                            type="text"
+                            name="size"
+                            placeholder="S, M, L, XL"
+                            value={formData.size}
+                            onChange={handleChange}
+                            className="w-full rounded-lg border border-stone-800 bg-black px-4 py-3 text-white placeholder:text-stone-500 outline-none focus:border-white transition"
+                            required
+                        />
+                    </div>
+
+                    <div>
+                        <label className="block mb-2 text-sm font-medium text-stone-300">
+                            Color
+                        </label>
+
+                        <input
+                            type="text"
+                            name="color"
+                            placeholder="Black"
+                            value={formData.color}
+                            onChange={handleChange}
+                            className="w-full rounded-lg border border-stone-800 bg-black px-4 py-3 text-white placeholder:text-stone-500 outline-none focus:border-white transition"
+                            required
+                        />
+                    </div>
+
+                </div>
+
+                {/* Stock */}
+
+                <div>
+                    <label className="block mb-2 text-sm font-medium text-stone-300">
+                        Stock Quantity
+                    </label>
+
+                    <input
+                        type="number"
+                        name="stock"
+                        placeholder="Available quantity"
+                        value={formData.stock}
+                        onChange={handleChange}
+                        className="w-full rounded-lg border border-stone-800 bg-black px-4 py-3 text-white placeholder:text-stone-500 outline-none focus:border-white transition"
+                        required
+                    />
+                </div>
+
+                {/* Image URL */}
+
+                <div>
+                    <label className="block mb-2 text-sm font-medium text-stone-300">
+                        Image URL
+                    </label>
+
+                    <input
+                        type="text"
+                        name="image"
+                        placeholder="https://example.com/image.jpg"
+                        value={formData.image}
+                        onChange={handleChange}
+                        className="w-full rounded-lg border border-stone-800 bg-black px-4 py-3 text-white placeholder:text-stone-500 outline-none focus:border-white transition"
+                        required
+                    />
+                </div>
+
+                {/* Submit Button */}
 
                 <button
                     type="submit"
-                    className="px-6 py-3 border rounded"
+                    className="
+          w-full
+          border
+          border-white
+          rounded-lg
+          py-3
+          text-sm
+          font-semibold
+          uppercase
+          tracking-widest
+          hover:bg-white
+          hover:text-black
+          transition-all
+          duration-300
+          "
                 >
                     Add Product
                 </button>
