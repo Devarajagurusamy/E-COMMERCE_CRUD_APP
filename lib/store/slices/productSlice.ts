@@ -66,6 +66,80 @@ export const fetchProductById = createAsyncThunk(
   }
 );
 
+export const createProduct = createAsyncThunk(
+  "products/createProduct",
+  async (productData: Omit<Product, "_id">, { rejectWithValue }) => {
+    try {
+      const response = await axiosInstance.post(
+        "/api/products",
+        productData
+      );
+
+      if (response.data.success) {
+        return response.data.data;
+      }
+
+      return rejectWithValue(response.data.message);
+    } catch (error: any) {
+      return rejectWithValue(
+        error.response?.data?.message || "Error creating product"
+      );
+    }
+  }
+);
+
+export const updateProduct = createAsyncThunk(
+  "products/updateProduct",
+  async (
+    {
+      id,
+      data,
+    }: {
+      id: string;
+      data: Partial<Product>;
+    },
+    { rejectWithValue }
+  ) => {
+    try {
+      const response = await axiosInstance.put(
+        `/api/products/${id}`,
+        data
+      );
+
+      if (response.data.success) {
+        return response.data.data;
+      }
+
+      return rejectWithValue(response.data.message);
+    } catch (error: any) {
+      return rejectWithValue(
+        error.response?.data?.message || "Error updating product"
+      );
+    }
+  }
+);
+
+export const deleteProduct = createAsyncThunk(
+  "products/deleteProduct",
+  async (id: string, { rejectWithValue }) => {
+    try {
+      const response = await axiosInstance.delete(
+        `/api/products/${id}`
+      );
+
+      if (response.data.success) {
+        return id;
+      }
+
+      return rejectWithValue(response.data.message);
+    } catch (error: any) {
+      return rejectWithValue(
+        error.response?.data?.message || "Error deleting product"
+      );
+    }
+  }
+);
+
 const productSlice = createSlice({
   name: "products",
   initialState,
@@ -98,6 +172,29 @@ const productSlice = createSlice({
       state.loading = false;
       state.error = action.payload as string;
     });
+
+    // Create, Update, Delete Product
+    builder.addCase(createProduct.fulfilled, (state, action) => {
+      state.products.unshift(action.payload);
+    });
+
+    builder.addCase(updateProduct.fulfilled, (state, action) => {
+      const index = state.products.findIndex(
+        (p) => p._id === action.payload._id
+      );
+
+      if (index !== -1) {
+        state.products[index] = action.payload;
+      }
+    });
+
+    builder.addCase(deleteProduct.fulfilled, (state, action) => {
+      state.products = state.products.filter(
+        (p) => p._id !== action.payload
+      );
+    });
+
+    
   },
 });
 
