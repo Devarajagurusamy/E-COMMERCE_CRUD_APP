@@ -138,7 +138,7 @@ export default function AdminProductsPage() {
 
             <thead>
 
-              <tr className="border-b bg-gray-50">
+              <tr className="border-b bg-muted text-foreground">
 
                 <th className="text-left p-4">
                   Image
@@ -205,7 +205,12 @@ export default function AdminProductsPage() {
 
                   <td className="p-4 space-x-2">
 
-                    <button className="px-3 py-1 border rounded hover:bg-gray-100">
+                    <button
+                      onClick={() =>
+                        router.push(`/admin/products/${product._id}/edit`)
+                      }
+                      className="px-3 py-1 border rounded hover:bg-gray-100"
+                    >
                       Edit
                     </button>
 

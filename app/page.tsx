@@ -6,10 +6,6 @@ export default function Home() {
       <p className="text-muted-foreground">
         Browse our collection of clothing items.
       </p>
-      <div className="text-4xl font-bold text-red-500">
-        Tailwind Working
-      </div>
-      <Button>Click Me</Button>
     </main>
   );
 }
