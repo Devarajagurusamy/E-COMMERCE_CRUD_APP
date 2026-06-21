@@ -1,13 +1,44 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useDispatch } from "react-redux";
 
 import { createProduct } from "@/lib/store/slices/productSlice";
 
+import axios from "axios";
+
 export default function AddProductPage() {
     const router = useRouter();
+
+    useEffect(() => {
+
+        const checkAdmin = async () => {
+
+            try {
+
+                const res = await axios.get("/api/auth/me");
+
+                if (!res.data.success) {
+                    router.push("/login");
+                    return;
+                }
+
+                if (res.data.user.role !== "admin") {
+                    router.push("/");
+                }
+
+            } catch {
+
+                router.push("/login");
+
+            }
+
+        };
+
+        checkAdmin();
+
+    }, [router]);
 
     const dispatch = useDispatch<any>();
 

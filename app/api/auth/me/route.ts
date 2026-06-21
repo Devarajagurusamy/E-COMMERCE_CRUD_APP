@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import connectDB from "@/lib/mongodb";
 import { User } from "@/lib/models/User";
-import { verifyToken } from "@/lib/utils/generateToken";
+import { verifyToken } from "@/lib/utils/verifyToken";
 
 export async function GET(request: NextRequest) {
     try {

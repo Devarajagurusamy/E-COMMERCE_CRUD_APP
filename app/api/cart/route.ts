@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import connectDB from "@/lib/mongodb";
 import { Cart } from "@/lib/models/Cart";
 import { Product } from "@/lib/models/Product";
-import { verifyToken } from "@/lib/utils/generateToken";
+import { verifyToken } from "@/lib/utils/verifyToken";
 import mongoose from "mongoose";
 
 // Helper function to calculate totals

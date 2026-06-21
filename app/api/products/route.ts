@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import connectDB from "@/lib/mongodb";
 import { Product } from "@/lib/models/Product";
 import { productSchema } from "@/lib/schemas/productSchema";
-import { verifyToken } from "@/lib/utils/generateToken";
+import { verifyToken } from "@/lib/utils/verifyToken";
 
 // GET /api/products - Get all products
 export async function GET(request: NextRequest) {

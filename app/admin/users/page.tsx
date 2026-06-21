@@ -2,6 +2,8 @@
 
 import { useEffect, useState } from "react";
 import axiosInstance from "@/lib/axios";
+import { useRouter } from "next/navigation";
+import axios from "axios";
 
 interface User {
   _id: string;
@@ -14,6 +16,36 @@ interface User {
 export default function AdminUsersPage() {
   const [users, setUsers] = useState<User[]>([]);
   const [loading, setLoading] = useState(true);
+  const router = useRouter();
+
+  useEffect(() => {
+
+    const checkAdmin = async () => {
+
+      try {
+
+        const res = await axios.get("/api/auth/me");
+
+        if (!res.data.success) {
+          router.push("/login");
+          return;
+        }
+
+        if (res.data.user.role !== "admin") {
+          router.push("/");
+        }
+
+      } catch {
+
+        router.push("/login");
+
+      }
+
+    };
+
+    checkAdmin();
+
+  }, [router]);
 
   useEffect(() => {
     fetchUsers();

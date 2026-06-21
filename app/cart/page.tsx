@@ -13,9 +13,39 @@ import { Button } from "@/components/ui/button";
 import CartItem from "@/components/CartItem";
 import CartSummary from "@/components/CartSummary";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import axios from "axios";
 
 export default function CartPage() {
+
+  
   const dispatch = useDispatch<AppDispatch>();
+  
+  const router = useRouter();
+
+  useEffect(() => {
+
+    const checkAuth = async () => {
+
+      try {
+
+        const res = await axios.get("/api/auth/me");
+
+        if (!res.data.success) {
+          router.push("/login");
+        }
+
+      } catch {
+
+        router.push("/login");
+
+      }
+
+    };
+
+    checkAuth();
+
+  }, [router]);
 
   const { items, totalItems, totalPrice, loading, error } = useSelector(
     (state: RootState) => state.cart
@@ -24,6 +54,7 @@ export default function CartPage() {
   useEffect(() => {
     dispatch(fetchCart());
   }, [dispatch]);
+
 
   const handleIncrease = (productId: string) => {
     const item = items.find((item) => item.product._id === productId);

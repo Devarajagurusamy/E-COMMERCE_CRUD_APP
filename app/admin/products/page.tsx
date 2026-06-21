@@ -9,10 +9,41 @@ import {
 } from "@/lib/store/slices/productSlice";
 
 import { useRouter } from "next/navigation";
+import axios from "axios";
+
 
 export default function AdminProductsPage() {
   const dispatch = useDispatch<any>();
   const router = useRouter();
+
+  useEffect(() => {
+
+    const checkAdmin = async () => {
+
+      try {
+
+        const res = await axios.get("/api/auth/me");
+
+        if (!res.data.success) {
+          router.push("/login");
+          return;
+        }
+
+        if (res.data.user.role !== "admin") {
+          router.push("/");
+        }
+
+      } catch {
+
+        router.push("/login");
+
+      }
+
+    };
+
+    checkAdmin();
+
+  }, [router]);
 
   const { products, loading, error } = useSelector(
     (state: any) => state.products

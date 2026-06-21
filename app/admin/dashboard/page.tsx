@@ -2,6 +2,8 @@
 
 import { useEffect, useState } from "react";
 import axiosInstance from "@/lib/axios";
+import { useRouter } from "next/navigation";
+import axios from "axios";
 
 interface Stats {
   totalUsers: number;
@@ -17,6 +19,37 @@ export default function AdminDashboardPage() {
   });
 
   const [loading, setLoading] = useState(true);
+
+  const router = useRouter();
+
+  useEffect(() => {
+
+    const checkAdmin = async () => {
+
+      try {
+
+        const res = await axios.get("/api/auth/me");
+
+        if (!res.data.success) {
+          router.push("/login");
+          return;
+        }
+
+        if (res.data.user.role !== "admin") {
+          router.push("/");
+        }
+
+      } catch {
+
+        router.push("/login");
+
+      }
+
+    };
+
+    checkAdmin();
+
+  }, [router]);
 
   useEffect(() => {
     fetchStats();

@@ -6,7 +6,7 @@ import { User } from "@/lib/models/User";
 import { Product } from "@/lib/models/Product";
 import { Cart } from "@/lib/models/Cart";
 
-import { verifyToken } from "@/lib/utils/generateToken";
+import { verifyToken } from "@/lib/utils/verifyToken";
 
 export async function GET(request: NextRequest) {
     try {
