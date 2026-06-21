@@ -21,9 +21,11 @@ export default function ProductsPage() {
   return (
     <main className="page-container">
       {/* Header */}
-      <div className="mb-8">
-        <h1 className="section-title">Products</h1>
-        <p className="text-muted-foreground">
+      <div className="mb-10 text-center">
+        <h1 className="text-4xl font-bold tracking-tight">
+          Products
+        </h1>
+        <p className="mt-3 text-muted-foreground">
           Browse our collection of products
         </p>
       </div>
