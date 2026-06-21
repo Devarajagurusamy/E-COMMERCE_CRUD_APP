@@ -86,7 +86,7 @@ export default function AdminUsersPage() {
 
           <thead>
 
-            <tr className="border-b bg-gray-50">
+            <tr className="border-b bg-muted text-foreground">
 
               <th className="p-4 text-left">
                 Name

@@ -26,9 +26,9 @@ export default function AdminSidebar() {
 
     return (
 
-        <aside className="w-64 min-h-screen border-r bg-white">
+        <aside className="w-64 min-h-screen border-r border-border bg-card">
 
-            <div className="p-6 text-2xl font-bold">
+            <div className="p-6 text-2xl font-bold text-foreground">
                 Admin Panel
             </div>
 
@@ -39,14 +39,18 @@ export default function AdminSidebar() {
                     <Link
                         key={link.href}
                         href={link.href}
-                        className={`block rounded-lg px-4 py-3
+                        className={`
+              block
+              rounded-lg
+              px-4
+              py-3
+              transition-colors
 
               ${pathname === link.href
 
-                                ? "bg-black text-white"
+                                ? "bg-primary text-primary-foreground"
 
-                                : "hover:bg-gray-100"
-
+                                : "text-foreground hover:bg-accent hover:text-accent-foreground"
                             }
             `}
                     >
@@ -62,4 +66,5 @@ export default function AdminSidebar() {
         </aside>
 
     );
+
 }

@@ -138,7 +138,7 @@ export default function AdminProductsPage() {
 
             <thead>
 
-              <tr className="border-b bg-gray-50">
+              <tr className="border-b bg-muted text-foreground">
 
                 <th className="text-left p-4">
                   Image
