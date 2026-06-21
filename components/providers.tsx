@@ -1,14 +1,38 @@
 "use client";
 
-import { Provider } from "react-redux";
+import { useEffect } from "react";
+import { Provider, useDispatch } from "react-redux";
+
 import { store } from "@/lib/store";
 import Header from "@/components/Header";
 
-export function Providers({ children }: { children: React.ReactNode }) {
+import { fetchCurrentUser } from "@/lib/store/slices/authSlice";
+
+function AuthInitializer({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  const dispatch = useDispatch<any>();
+
+  useEffect(() => {
+    dispatch(fetchCurrentUser());
+  }, [dispatch]);
+
+  return <>{children}</>;
+}
+
+export function Providers({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   return (
     <Provider store={store}>
-      <Header />
-      {children}
+      <AuthInitializer>
+        <Header />
+        {children}
+      </AuthInitializer>
     </Provider>
   );
 }

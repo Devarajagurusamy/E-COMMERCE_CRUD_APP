@@ -1,6 +1,11 @@
 import { NextRequest, NextResponse } from "next/server";
+
 import connectDB from "@/lib/mongodb";
+
 import { User } from "@/lib/models/User";
+import { Product } from "@/lib/models/Product";
+import { Cart } from "@/lib/models/Cart";
+
 import { verifyToken } from "@/lib/utils/verifyToken";
 
 export async function GET(request: NextRequest) {
@@ -14,50 +19,63 @@ export async function GET(request: NextRequest) {
             return NextResponse.json(
                 {
                     success: false,
-                    message: "No authentication token found",
+                    message: "Unauthorized - No token provided",
                 },
                 { status: 401 }
             );
         }
 
         // Verify token
-        const payload = verifyToken(token);
-        if (!payload) {
+        const decoded = verifyToken(token);
+
+        if (!decoded) {
             return NextResponse.json(
                 {
                     success: false,
-                    message: "Invalid or expired token",
+                    message: "Unauthorized - Invalid token",
                 },
                 { status: 401 }
             );
         }
 
-        // Find user by ID
-        const user = await User.findById(payload.id).select("-password");
-        if (!user) {
+        // Admin only
+        if (decoded.role !== "admin") {
             return NextResponse.json(
                 {
                     success: false,
-                    message: "User not found",
+                    message: "Forbidden - Admin access required",
                 },
-                { status: 404 }
+                { status: 403 }
             );
         }
+
+        // Get counts
+        const totalUsers = await User.countDocuments();
+
+        const totalProducts = await Product.countDocuments();
+
+        const carts = await Cart.find();
+
+        let totalCartItems = 0;
+
+        carts.forEach((cart) => {
+            totalCartItems += cart.items.length;
+        });
 
         return NextResponse.json(
             {
                 success: true,
-                user: {
-                    id: user._id,
-                    name: user.name,
-                    email: user.email,
-                    role: user.role,
+                data: {
+                    totalUsers,
+                    totalProducts,
+                    totalCartItems,
                 },
             },
             { status: 200 }
         );
     } catch (error) {
-        console.error("Get current user error:", error);
+        console.error("Admin stats error:", error);
+
         return NextResponse.json(
             {
                 success: false,

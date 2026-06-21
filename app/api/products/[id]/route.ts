@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import connectDB from "@/lib/mongodb";
 import { Product } from "@/lib/models/Product";
 import { productSchema, updateProductSchema } from "@/lib/schemas/productSchema";
-import { verifyToken } from "@/lib/utils/generateToken";
+import { verifyToken } from "@/lib/utils/verifyToken";
 import mongoose from "mongoose";
 
 // GET /api/products/[id] - Get product by ID

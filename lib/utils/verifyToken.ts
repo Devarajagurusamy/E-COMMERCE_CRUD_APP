@@ -6,18 +6,19 @@ export interface TokenPayload {
     role: "user" | "admin";
 }
 
-export function generateToken(payload: TokenPayload): string {
+export function verifyToken(token: string): TokenPayload | null {
     const secret = process.env.JWT_SECRET;
 
     if (!secret) {
         throw new Error("JWT_SECRET environment variable is not defined");
     }
 
-    const token = jwt.sign(payload, secret, {
-        expiresIn: "7d",
-    });
+    try {
+        return jwt.verify(token, secret) as TokenPayload;
+    } catch (error) {
+        console.log(error);
+        return null;
+    }
 
-    return token;
+    
 }
-
-
