@@ -61,3 +61,4 @@ CodeRabbit was used as an AI code reviewer to:
 - Suggest refactoring opportunities
 - Detect potential bugs
 - Improve code readability and maintainability
+

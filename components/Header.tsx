@@ -17,7 +17,7 @@ import { Button } from "@/components/ui/button";
 import CartDrawer from "@/components/CartDrawer";
 import ThemeToggle from "@/components/ThemeToggle";
 
-import { Menu, X } from "lucide-react";
+import { Menu, ShoppingBag, X } from "lucide-react";
 
 export default function Header() {
 
@@ -67,12 +67,12 @@ export default function Header() {
 
                 <div className="h-16 flex items-center justify-between">
 
-                    {/* Logo */}
                     <Link
                         href="/"
-                        className="text-2xl font-bold"
+                        className="flex items-center gap-2 text-2xl font-bold tracking-tight"
                     >
-                        EComm
+                        <ShoppingBag className="h-7 w-7" />
+                        <span>EComm</span>
                     </Link>
 
                     {/* Desktop Navigation */}

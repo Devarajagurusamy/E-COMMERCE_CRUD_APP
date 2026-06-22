@@ -7,6 +7,7 @@ import { store } from "@/lib/store";
 import Header from "@/components/Header";
 
 import { fetchCurrentUser } from "@/lib/store/slices/authSlice";
+import Footer from "./Footer";
 
 function AuthInitializer({
   children,
@@ -32,6 +33,7 @@ export function Providers({
       <AuthInitializer>
         <Header />
         {children}
+        <Footer />
       </AuthInitializer>
     </Provider>
   );
