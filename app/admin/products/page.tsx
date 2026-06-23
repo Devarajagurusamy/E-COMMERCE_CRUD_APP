@@ -92,7 +92,7 @@ export default function AdminProductsPage() {
           Product Management
         </h1>
 
-        <button className="px-4 py-2 rounded-md border hover:bg-gray-100" onClick={() => router.push("/admin/products/new")}>
+        <button className="px-4 py-2 rounded-md border hover:bg-white hover:text-black" onClick={() => router.push("/admin/products/new")}>
           Add Product
         </button>
 
