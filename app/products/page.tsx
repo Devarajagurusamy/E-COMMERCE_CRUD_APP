@@ -7,6 +7,7 @@ import { AppDispatch, RootState } from "@/lib/store";
 import ProductGrid from "@/components/ProductGrid";
 import ProductSkeleton from "@/components/ProductSkeleton";
 import EmptyProducts from "@/components/EmptyProducts";
+import ProductCardSkeleton from "@/components/ProductCardSkeleton";
 
 export default function ProductsPage() {
   const dispatch = useDispatch<AppDispatch>();
@@ -34,7 +35,7 @@ export default function ProductsPage() {
       {loading && (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6">
           {Array.from({ length: 8 }).map((_, i) => (
-            <ProductSkeleton key={i} />
+            <ProductCardSkeleton key={i} /> 
           ))}
         </div>
       )}
