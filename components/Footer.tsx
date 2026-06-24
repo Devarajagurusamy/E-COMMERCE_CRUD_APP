@@ -3,29 +3,30 @@ import Link from "next/link";
 export default function Footer() {
     return (
         <footer className="border-t border-border bg-background">
-            <div className="max-w-7xl mx-auto px-4 py-10">
+            <div className="max-w-7xl mx-auto px-5 sm:px-6 lg:px-8 py-10">
 
-                <div className="grid grid-cols-1 md:grid-cols-5 gap-8">
+                {/* Top Section */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-10 text-center lg:text-left">
 
                     {/* Brand */}
-                    <div className="space-y-3">
-                        <h2 className="text-xl font-bold tracking-tight">
+                    <div className="sm:col-span-2 lg:col-span-1 flex flex-col items-center lg:items-start">
+                        <h2 className="text-2xl font-bold">
                             E-Commerce
                         </h2>
 
-                        <p className="text-sm text-muted-foreground leading-relaxed">
+                        <p className="mt-3 text-sm text-muted-foreground leading-7 max-w-xs">
                             A modern e-commerce platform built with Next.js,
                             MongoDB, Redux Toolkit, and Tailwind CSS.
                         </p>
                     </div>
 
                     {/* Shop */}
-                    <div>
+                    <div className="flex flex-col items-center lg:items-start">
                         <h3 className="font-semibold mb-4">
                             Shop
                         </h3>
 
-                        <ul className="space-y-2 text-sm text-muted-foreground">
+                        <ul className="space-y-3 text-sm text-muted-foreground">
                             <li>
                                 <Link
                                     href="/products"
@@ -47,12 +48,12 @@ export default function Footer() {
                     </div>
 
                     {/* Account */}
-                    <div>
+                    <div className="flex flex-col items-center lg:items-start">
                         <h3 className="font-semibold mb-4">
                             Account
                         </h3>
 
-                        <ul className="space-y-2 text-sm text-muted-foreground">
+                        <ul className="space-y-3 text-sm text-muted-foreground">
                             <li>
                                 <Link
                                     href="/login"
@@ -73,13 +74,13 @@ export default function Footer() {
                         </ul>
                     </div>
 
-                    {/* Demo Credentials */}
-                    <div>
+                    {/* Demo Admin */}
+                    <div className="flex flex-col items-center lg:items-start">
                         <h3 className="font-semibold mb-4">
                             Demo Admin
                         </h3>
 
-                        <div className="space-y-2 text-sm text-muted-foreground">
+                        <div className="space-y-3 text-sm text-muted-foreground">
                             <p>
                                 <span className="font-medium text-foreground">
                                     Email:
@@ -97,12 +98,12 @@ export default function Footer() {
                     </div>
 
                     {/* Tech Stack */}
-                    <div>
+                    <div className="flex flex-col items-center lg:items-start">
                         <h3 className="font-semibold mb-4">
                             Built With
                         </h3>
 
-                        <ul className="space-y-2 text-sm text-muted-foreground">
+                        <ul className="space-y-3 text-sm text-muted-foreground">
                             <li>Next.js 16</li>
                             <li>MongoDB Atlas</li>
                             <li>Redux Toolkit</li>
@@ -112,14 +113,16 @@ export default function Footer() {
 
                 </div>
 
-                <div className="mt-10 pt-6 border-t border-border flex flex-col md:flex-row justify-between items-center gap-3">
+                {/* Bottom Section */}
+                <div className="mt-10 pt-6 border-t border-border flex flex-col md:flex-row justify-between items-center gap-4 text-center">
 
                     <p className="text-sm text-muted-foreground">
                         © 2026 E-Commerce CRUD App. All rights reserved.
                     </p>
 
-                    <div className="flex items-center gap-4 text-sm">
-                        <span className="text-muted-foreground">
+                    <div className="flex flex-col sm:flex-row items-center gap-2 sm:gap-4">
+
+                        <span className="text-sm text-muted-foreground">
                             Built by Devaraja
                         </span>
 
@@ -131,6 +134,7 @@ export default function Footer() {
                         >
                             LinkedIn →
                         </a>
+
                     </div>
 
                 </div>

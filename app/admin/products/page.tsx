@@ -65,7 +65,6 @@ export default function AdminProductsPage() {
     try {
       await dispatch(deleteProduct(id)).unwrap();
 
-      alert("Product deleted successfully");
     } catch (error: any) {
       alert(error || "Failed to delete product");
     }
