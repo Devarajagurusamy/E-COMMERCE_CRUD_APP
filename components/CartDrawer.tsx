@@ -82,7 +82,7 @@ export default function CartDrawer({
                 </Button>
             </SheetTrigger>
 
-            <SheetContent side="right">
+            <SheetContent className="flex flex-col h-screen sm:max-w-lg overflow-hidden"  side="right">
                 <SheetHeader>
                     <SheetTitle>Shopping Cart</SheetTitle>
                     <SheetDescription>
@@ -90,9 +90,9 @@ export default function CartDrawer({
                     </SheetDescription>
                 </SheetHeader>
 
-                <div className="flex flex-col h-full py-4 gap-4">
+                <div className="flex flex-col flex-1 min-h-0 py-4 gap-4">
                     {/* Cart Items */}
-                    <div className="flex-1 overflow-y-auto space-y-3">
+                    <div className="flex-1 min-h-0 overflow-y-auto pr-2 space-y-3">
                         {loading && items.length === 0 ? (
                             <div className="flex items-center justify-center h-full">
                                 <p className="text-muted-foreground">Loading cart...</p>
@@ -124,7 +124,7 @@ export default function CartDrawer({
 
                     {/* Cart Summary */}
                     {items.length > 0 && (
-                        <div className="border-t border-border pt-4">
+                        <div className="border-t border-border pt-4 pb-4 shrink-0">
                             <CartSummary
                                 totalItems={totalItems}
                                 totalPrice={totalPrice}
