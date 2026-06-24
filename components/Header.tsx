@@ -47,9 +47,11 @@ export default function Header() {
 
             setOpen(false);
 
-            router.push("/login");
+            window.location.href = "/";
 
-            router.refresh();
+            // router.push("/login");
+
+            // router.refresh();
 
         } catch (error) {
 

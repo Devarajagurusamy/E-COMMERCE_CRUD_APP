@@ -35,7 +35,7 @@ export default function LoginPage() {
       if (response.data.success) {
         // Store user in Redux
         dispatch(setUser(response.data.user));
-        router.push("/");
+        window.location.href = "/";
       }
     } catch (error: any) {
       const message =

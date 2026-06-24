@@ -1,9 +1,11 @@
+import Link from "next/link";
+
 export default function Footer() {
     return (
         <footer className="border-t border-border bg-background">
             <div className="max-w-7xl mx-auto px-4 py-10">
 
-                <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
+                <div className="grid grid-cols-1 md:grid-cols-5 gap-8">
 
                     {/* Brand */}
                     <div className="space-y-3">
@@ -12,8 +14,8 @@ export default function Footer() {
                         </h2>
 
                         <p className="text-sm text-muted-foreground leading-relaxed">
-                            A modern e-commerce platform built with Next.js, MongoDB,
-                            Redux Toolkit, and Tailwind CSS.
+                            A modern e-commerce platform built with Next.js,
+                            MongoDB, Redux Toolkit, and Tailwind CSS.
                         </p>
                     </div>
 
@@ -25,15 +27,21 @@ export default function Footer() {
 
                         <ul className="space-y-2 text-sm text-muted-foreground">
                             <li>
-                                <a href="/products" className="hover:text-foreground transition-colors">
+                                <Link
+                                    href="/products"
+                                    className="hover:text-foreground transition-colors"
+                                >
                                     Products
-                                </a>
+                                </Link>
                             </li>
 
                             <li>
-                                <a href="/cart" className="hover:text-foreground transition-colors">
+                                <Link
+                                    href="/cart"
+                                    className="hover:text-foreground transition-colors"
+                                >
                                     Cart
-                                </a>
+                                </Link>
                             </li>
                         </ul>
                     </div>
@@ -46,17 +54,46 @@ export default function Footer() {
 
                         <ul className="space-y-2 text-sm text-muted-foreground">
                             <li>
-                                <a href="/login" className="hover:text-foreground transition-colors">
+                                <Link
+                                    href="/login"
+                                    className="hover:text-foreground transition-colors"
+                                >
                                     Login
-                                </a>
+                                </Link>
                             </li>
 
                             <li>
-                                <a href="/register" className="hover:text-foreground transition-colors">
+                                <Link
+                                    href="/register"
+                                    className="hover:text-foreground transition-colors"
+                                >
                                     Register
-                                </a>
+                                </Link>
                             </li>
                         </ul>
+                    </div>
+
+                    {/* Demo Credentials */}
+                    <div>
+                        <h3 className="font-semibold mb-4">
+                            Demo Admin
+                        </h3>
+
+                        <div className="space-y-2 text-sm text-muted-foreground">
+                            <p>
+                                <span className="font-medium text-foreground">
+                                    Email:
+                                </span>{" "}
+                                admin@gmail.com
+                            </p>
+
+                            <p>
+                                <span className="font-medium text-foreground">
+                                    Password:
+                                </span>{" "}
+                                123456
+                            </p>
+                        </div>
                     </div>
 
                     {/* Tech Stack */}
@@ -81,9 +118,20 @@ export default function Footer() {
                         © 2026 E-Commerce CRUD App. All rights reserved.
                     </p>
 
-                    <p className="text-sm text-muted-foreground">
-                        Built by Devaraja
-                    </p>
+                    <div className="flex items-center gap-4 text-sm">
+                        <span className="text-muted-foreground">
+                            Built by Devaraja
+                        </span>
+
+                        <a
+                            href="https://www.linkedin.com/in/devaraja-s-g/"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="font-medium hover:underline"
+                        >
+                            LinkedIn →
+                        </a>
+                    </div>
 
                 </div>
 
