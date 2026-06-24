@@ -5,7 +5,7 @@ import { verifyToken } from "@/lib/utils/verifyToken";
 import mongoose from "mongoose";
 
 // Helper function to calculate totals
-async function calculateTotals(cartItems: any[]) {
+function calculateTotals(cartItems: any[]) {
     let totalItems = 0;
     let totalPrice = 0;
 
@@ -21,6 +21,20 @@ async function calculateTotals(cartItems: any[]) {
         totalItems: Math.round(totalItems),
         totalPrice: Math.round(totalPrice),
     };
+}
+
+async function getValidCartItems(cart: any) {
+    const validCartEntries = cart.items.filter((item: any) => item.productId);
+
+    if (validCartEntries.length !== cart.items.length) {
+        cart.items = validCartEntries;
+        await cart.save();
+    }
+
+    return validCartEntries.map((item: any) => ({
+        product: item.productId,
+        quantity: item.quantity,
+    }));
 }
 
 // DELETE /api/cart/[productId] - Remove item from cart
@@ -105,12 +119,9 @@ export async function DELETE(
             select: "title price discount image stock",
         });
 
-        const items = cart.items.map((item: any) => ({
-            product: item.productId,
-            quantity: item.quantity,
-        }));
+        const items = await getValidCartItems(cart);
 
-        const { totalItems, totalPrice } = await calculateTotals(items);
+        const { totalItems, totalPrice } = calculateTotals(items);
 
         return NextResponse.json(
             {

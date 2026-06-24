@@ -6,7 +6,7 @@ import { verifyToken } from "@/lib/utils/verifyToken";
 import mongoose from "mongoose";
 
 // Helper function to calculate totals
-async function calculateTotals(cartItems: any[]) {
+function calculateTotals(cartItems: any[]) {
     let totalItems = 0;
     let totalPrice = 0;
 
@@ -22,6 +22,22 @@ async function calculateTotals(cartItems: any[]) {
         totalItems: Math.round(totalItems),
         totalPrice: Math.round(totalPrice),
     };
+}
+
+// A populated reference is null when its product was deleted. Remove those
+// stale cart entries so they cannot break the cart response or totals.
+async function getValidCartItems(cart: any) {
+    const validCartEntries = cart.items.filter((item: any) => item.productId);
+
+    if (validCartEntries.length !== cart.items.length) {
+        cart.items = validCartEntries;
+        await cart.save();
+    }
+
+    return validCartEntries.map((item: any) => ({
+        product: item.productId,
+        quantity: item.quantity,
+    }));
 }
 
 // GET /api/cart - Get cart items
@@ -75,12 +91,9 @@ export async function GET(request: NextRequest) {
         }
 
         // Transform items to match expected format
-        const items = cart.items.map((item: any) => ({
-            product: item.productId,
-            quantity: item.quantity,
-        }));
+        const items = await getValidCartItems(cart);
 
-        const { totalItems, totalPrice } = await calculateTotals(items);
+        const { totalItems, totalPrice } = calculateTotals(items);
 
         return NextResponse.json(
             {
@@ -210,12 +223,9 @@ export async function POST(request: NextRequest) {
             select: "title price discount image stock",
         });
 
-        const items = cart.items.map((item: any) => ({
-            product: item.productId,
-            quantity: item.quantity,
-        }));
+        const items = await getValidCartItems(cart);
 
-        const { totalItems, totalPrice } = await calculateTotals(items);
+        const { totalItems, totalPrice } = calculateTotals(items);
 
         return NextResponse.json(
             {
@@ -349,12 +359,9 @@ export async function PUT(request: NextRequest) {
             select: "title price discount image stock",
         });
 
-        const items = cart.items.map((item: any) => ({
-            product: item.productId,
-            quantity: item.quantity,
-        }));
+        const items = await getValidCartItems(cart);
 
-        const { totalItems, totalPrice } = await calculateTotals(items);
+        const { totalItems, totalPrice } = calculateTotals(items);
 
         return NextResponse.json(
             {

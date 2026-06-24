@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import connectDB from "@/lib/mongodb";
 import { Product } from "@/lib/models/Product";
+import { Cart } from "@/lib/models/Cart";
 import { productSchema, updateProductSchema } from "@/lib/schemas/productSchema";
 import { verifyToken } from "@/lib/utils/verifyToken";
 import mongoose from "mongoose";
@@ -231,6 +232,12 @@ export async function DELETE(
                 { status: 404 }
             );
         }
+
+        // Prevent carts from retaining a reference to a product that no longer exists.
+        await Cart.updateMany(
+            { "items.productId": deletedProduct._id },
+            { $pull: { items: { productId: deletedProduct._id } } }
+        );
 
         return NextResponse.json(
             {
