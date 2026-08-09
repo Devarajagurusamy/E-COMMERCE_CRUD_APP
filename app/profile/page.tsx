@@ -5,6 +5,8 @@ import axiosInstance from "@/lib/axios";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
+import { useDispatch } from "react-redux";
+import { logout } from "@/lib/store/slices/authSlice";
 import {
   User as UserIcon,
   Mail,
@@ -18,6 +20,7 @@ import {
   ArrowRight,
   Loader2,
   ShieldCheck,
+  LogOut,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -56,11 +59,22 @@ interface OrderSummary {
 
 export default function ProfilePage() {
   const router = useRouter();
+  const dispatch = useDispatch();
 
   const [user, setUser] = useState<UserProfile | null>(null);
   const [addresses, setAddresses] = useState<AddressItem[]>([]);
   const [recentOrders, setRecentOrders] = useState<OrderSummary[]>([]);
   const [loading, setLoading] = useState(true);
+
+  const handleLogout = async () => {
+    try {
+      await axiosInstance.post("/api/auth/logout");
+      dispatch(logout());
+      window.location.href = "/";
+    } catch (error) {
+      console.error("Logout error:", error);
+    }
+  };
 
   // Profile Edit State
   const [isEditingProfile, setIsEditingProfile] = useState(false);
@@ -288,13 +302,23 @@ export default function ProfilePage() {
           </div>
         </div>
 
-        <Link href="/orders">
-          <Button variant="default" className="gap-2">
-            <ShoppingBag className="w-4 h-4" />
-            <span>My Orders Page</span>
-            <ArrowRight className="w-4 h-4" />
+        <div className="flex items-center gap-3 flex-wrap">
+          <Link href="/orders">
+            <Button variant="default" className="gap-2">
+              <ShoppingBag className="w-4 h-4" />
+              <span>My Orders Page</span>
+              <ArrowRight className="w-4 h-4" />
+            </Button>
+          </Link>
+          <Button
+            variant="outline"
+            onClick={handleLogout}
+            className="gap-2 text-destructive border-destructive/30 hover:bg-destructive/10 hover:text-destructive"
+          >
+            <LogOut className="w-4 h-4" />
+            <span>Logout</span>
           </Button>
-        </Link>
+        </div>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
@@ -424,6 +448,17 @@ export default function ProfilePage() {
                         {user.phone || "Not provided"}
                       </p>
                     </div>
+                  </div>
+
+                  <div className="border-t border-border pt-4 mt-4">
+                    <Button
+                      variant="outline"
+                      onClick={handleLogout}
+                      className="w-full gap-2 text-destructive border-destructive/30 hover:bg-destructive/10 hover:text-destructive"
+                    >
+                      <LogOut className="w-4 h-4" />
+                      <span>Logout of Account</span>
+                    </Button>
                   </div>
                 </div>
               )}

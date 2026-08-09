@@ -130,14 +130,6 @@ export default function Header() {
 
                                 )}
 
-                                <Button
-                                    variant="ghost"
-                                    size="sm"
-                                    onClick={handleLogout}
-                                >
-                                    Logout
-                                </Button>
-
                             </>
 
                         )}
@@ -263,14 +255,6 @@ export default function Header() {
                                     </Link>
 
                                 )}
-
-                                <Button
-                                    variant="ghost"
-                                    className="w-full justify-start"
-                                    onClick={handleLogout}
-                                >
-                                    Logout
-                                </Button>
 
                             </>
 
