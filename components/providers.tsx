@@ -2,12 +2,12 @@
 
 import { useEffect } from "react";
 import { Provider, useDispatch } from "react-redux";
+import { usePathname } from "next/navigation";
 
 import { store } from "@/lib/store";
 import Header from "@/components/Header";
-
-import { fetchCurrentUser } from "@/lib/store/slices/authSlice";
 import Footer from "./Footer";
+import { fetchCurrentUser } from "@/lib/store/slices/authSlice";
 
 function AuthInitializer({
   children,
@@ -23,6 +23,19 @@ function AuthInitializer({
   return <>{children}</>;
 }
 
+function MainLayout({ children }: { children: React.ReactNode }) {
+  const pathname = usePathname();
+  const isAdminRoute = pathname?.startsWith("/admin");
+
+  return (
+    <>
+      {!isAdminRoute && <Header />}
+      {children}
+      {!isAdminRoute && <Footer />}
+    </>
+  );
+}
+
 export function Providers({
   children,
 }: {
@@ -31,9 +44,7 @@ export function Providers({
   return (
     <Provider store={store}>
       <AuthInitializer>
-        <Header />
-        {children}
-        <Footer />
+        <MainLayout>{children}</MainLayout>
       </AuthInitializer>
     </Provider>
   );
