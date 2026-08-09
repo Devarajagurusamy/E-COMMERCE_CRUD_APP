@@ -4,13 +4,15 @@ import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams, useRouter } from "next/navigation";
 import { fetchProductById } from "@/lib/store/slices/productSlice";
-import { addToCart } from "@/lib/store/slices/cartSlice";
+import { addToCart, fetchCart } from "@/lib/store/slices/cartSlice";
 import { AppDispatch, RootState } from "@/lib/store";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import Image from "next/image";
 import Link from "next/link";
 import ProductSkeleton from "@/components/ProductSkeleton";
+import axiosInstance from "@/lib/axios";
+import { CreditCard, Loader2 } from "lucide-react";
 
 export default function ProductDetailPage() {
   const params = useParams();
@@ -22,6 +24,8 @@ export default function ProductDetailPage() {
   const { isAuthenticated } = useSelector((state: RootState) => state.auth);
   const { loading: cartLoading } = useSelector((state: RootState) => state.cart);
   const [localLoading, setLocalLoading] = useState(false);
+  const [isCheckingOut, setIsCheckingOut] = useState(false);
+  const [checkoutError, setCheckoutError] = useState<string | null>(null);
 
   const productId = params.id as string;
 
@@ -50,6 +54,127 @@ export default function ProductDetailPage() {
       console.error("Error adding to cart:", error);
     } finally {
       setLocalLoading(false);
+    }
+  };
+
+  const loadRazorpayScript = (): Promise<boolean> => {
+    return new Promise((resolve) => {
+      if ((window as any).Razorpay) {
+        resolve(true);
+        return;
+      }
+      const script = document.createElement("script");
+      script.src = "https://checkout.razorpay.com/v1/checkout.js";
+      script.onload = () => resolve(true);
+      script.onerror = () => resolve(false);
+      document.body.appendChild(script);
+    });
+  };
+
+  const handleCancelOrder = async (razorpayOrderId: string) => {
+    try {
+      await axiosInstance.post("/api/checkout/cancel", {
+        razorpay_order_id: razorpayOrderId,
+      });
+    } catch (err) {
+      console.error("Failed to update cancelled order status:", err);
+    }
+  };
+
+  const handleProceedToCheckout = async () => {
+    if (!isAuthenticated) {
+      router.push("/login");
+      return;
+    }
+
+    setCheckoutError(null);
+    setIsCheckingOut(true);
+
+    try {
+      // 1. Add current item to cart first
+      await dispatch(addToCart({ productId: product!._id, quantity: 1 })).unwrap();
+
+      // 2. Create order on server
+      const { data } = await axiosInstance.post("/api/checkout/create-order");
+
+      if (!data.success) {
+        setCheckoutError(data.message || "Failed to initiate order");
+        setIsCheckingOut(false);
+        return;
+      }
+
+      // 3. Load Razorpay script
+      const isLoaded = await loadRazorpayScript();
+      if (!isLoaded) {
+        setCheckoutError("Razorpay SDK failed to load. Are you online?");
+        setIsCheckingOut(false);
+        return;
+      }
+
+      // 4. Open Razorpay Modal Window
+      const options = {
+        key: data.key,
+        amount: data.amount,
+        currency: data.currency,
+        name: "E-Commerce Clothing Store",
+        description: "Purchase Checkout",
+        order_id: data.razorpayOrderId,
+        handler: async function (response: any) {
+          try {
+            const verifyRes = await axiosInstance.post("/api/checkout/verify", {
+              razorpay_order_id: response.razorpay_order_id,
+              razorpay_payment_id: response.razorpay_payment_id,
+              razorpay_signature: response.razorpay_signature,
+            });
+
+            if (verifyRes.data.success) {
+              dispatch(fetchCart());
+              router.push(`/orders/success?orderId=${verifyRes.data.orderId}`);
+            } else {
+              setCheckoutError(
+                verifyRes.data.message || "Payment verification failed"
+              );
+              await handleCancelOrder(data.razorpayOrderId);
+            }
+          } catch (err: any) {
+            setCheckoutError(
+              err.response?.data?.message || "Error verifying payment signature"
+            );
+            await handleCancelOrder(data.razorpayOrderId);
+          } finally {
+            setIsCheckingOut(false);
+          }
+        },
+        modal: {
+          ondismiss: async function () {
+            setIsCheckingOut(false);
+            await handleCancelOrder(data.razorpayOrderId);
+          },
+        },
+        theme: {
+          color: "#18181b",
+        },
+      };
+
+      const razorpayWindow = new (window as any).Razorpay(options);
+
+      razorpayWindow.on("payment.failed", async function (response: any) {
+        setCheckoutError(
+          response.error?.description || "Payment failed or cancelled."
+        );
+        await handleCancelOrder(data.razorpayOrderId);
+        setIsCheckingOut(false);
+      });
+
+      razorpayWindow.open();
+    } catch (error: any) {
+      console.error("Checkout Error:", error);
+      setCheckoutError(
+        error.response?.data?.message ||
+          error?.message ||
+          "An error occurred during checkout."
+      );
+      setIsCheckingOut(false);
     }
   };
 
@@ -184,8 +309,9 @@ export default function ProductDetailPage() {
                 <div>
                   <p className="text-sm text-muted-foreground">Status</p>
                   <p
-                    className={`font-semibold ${inStock ? "text-green-600" : "text-red-600"
-                      }`}
+                    className={`font-semibold ${
+                      inStock ? "text-green-600" : "text-red-600"
+                    }`}
                   >
                     {inStock ? "✓ In Stock" : "✗ Out of Stock"}
                   </p>
@@ -198,19 +324,39 @@ export default function ProductDetailPage() {
           <div className="flex gap-3 pt-4">
             <Button
               size="lg"
-              disabled={!inStock || cartLoading || localLoading}
+              disabled={!inStock || cartLoading || localLoading || isCheckingOut}
               className="flex-1"
-              variant="default"
+              variant="outline"
               onClick={handleAddToCart}
             >
               {localLoading ? "Adding..." : inStock ? "Add to Cart" : "Unavailable"}
             </Button>
-            <Link href="/products" className="flex-1">
-              <Button size="lg" variant="outline" className="w-full">
-                Continue Shopping
-              </Button>
-            </Link>
+            <Button
+              size="lg"
+              disabled={!inStock || cartLoading || localLoading || isCheckingOut}
+              className="flex-1 gap-2"
+              variant="default"
+              onClick={handleProceedToCheckout}
+            >
+              {isCheckingOut ? (
+                <>
+                  <Loader2 className="h-4 w-4 animate-spin" />
+                  <span>Processing...</span>
+                </>
+              ) : (
+                <>
+                  <CreditCard className="h-4 w-4" />
+                  <span>Proceed To Checkout</span>
+                </>
+              )}
+            </Button>
           </div>
+
+          {checkoutError && (
+            <div className="p-3 bg-destructive/10 border border-destructive/30 rounded-md text-xs text-destructive">
+              {checkoutError}
+            </div>
+          )}
 
           {/* Additional Info */}
           {!inStock && (
@@ -225,3 +371,4 @@ export default function ProductDetailPage() {
     </main>
   );
 }
+
