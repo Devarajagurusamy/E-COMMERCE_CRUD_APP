@@ -63,8 +63,10 @@ export async function POST(request: NextRequest) {
     }
 
     if (isSignatureValid) {
-      // Update order status to paid
+      // Update order status to paid and confirmed
       order.status = "paid";
+      order.paymentStatus = "Paid";
+      order.orderStatus = "Confirmed";
       order.razorpayPaymentId = razorpay_payment_id;
       order.razorpaySignature = razorpay_signature;
       await order.save();
@@ -83,6 +85,7 @@ export async function POST(request: NextRequest) {
     } else {
       // Update order status to failed
       order.status = "failed";
+      order.paymentStatus = "Failed";
       await order.save();
 
       return NextResponse.json(

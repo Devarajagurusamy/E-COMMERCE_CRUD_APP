@@ -15,6 +15,11 @@ const links = [
     },
 
     {
+        name: "Orders",
+        href: "/admin/orders",
+    },
+
+    {
         name: "Users",
         href: "/admin/users",
     },

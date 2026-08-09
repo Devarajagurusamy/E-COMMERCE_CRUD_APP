@@ -31,9 +31,58 @@ const orderSchema = new mongoose.Schema(
         },
       },
     ],
+    subtotal: {
+      type: Number,
+      default: 0,
+    },
+    shippingFee: {
+      type: Number,
+      default: 0,
+    },
+    discountAmount: {
+      type: Number,
+      default: 0,
+    },
     totalAmount: {
       type: Number,
       required: true,
+    },
+    paymentMethod: {
+      type: String,
+      default: "Razorpay",
+    },
+    paymentStatus: {
+      type: String,
+      enum: ["Pending", "Paid", "Failed", "Refunded"],
+      default: "Pending",
+    },
+    orderStatus: {
+      type: String,
+      enum: [
+        "Pending",
+        "Confirmed",
+        "Processing",
+        "Shipped",
+        "Delivered",
+        "Cancelled",
+        "Refunded",
+      ],
+      default: "Pending",
+    },
+    // Historical Customer Information preserved at checkout time
+    customerDetails: {
+      name: { type: String, default: "" },
+      email: { type: String, default: "" },
+      phone: { type: String, default: "" },
+    },
+    // Historical Shipping Address preserved at checkout time
+    shippingAddress: {
+      recipientName: { type: String, default: "" },
+      phone: { type: String, default: "" },
+      address: { type: String, default: "" },
+      city: { type: String, default: "" },
+      state: { type: String, default: "" },
+      postalCode: { type: String, default: "" },
     },
     razorpayOrderId: {
       type: String,
@@ -48,9 +97,9 @@ const orderSchema = new mongoose.Schema(
       type: String,
       default: "",
     },
+    // Legacy status field retained for backward compatibility
     status: {
       type: String,
-      enum: ["pending", "paid", "failed"],
       default: "pending",
     },
   },

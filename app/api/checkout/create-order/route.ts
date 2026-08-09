@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import connectDB from "@/lib/mongodb";
 import { Cart } from "@/lib/models/Cart";
 import { Order } from "@/lib/models/Order";
+import { User } from "@/lib/models/User";
 import { verifyToken } from "@/lib/utils/verifyToken";
 import Razorpay from "razorpay";
 
@@ -90,11 +91,35 @@ export async function POST(request: NextRequest) {
 
     const razorpayOrder = await razorpay.orders.create(options);
 
+    // Find User Details for customer snapshot
+    const userDoc = await User.findById(payload.id);
+    const customerName = userDoc?.name || payload.email?.split("@")[0] || "Customer";
+    const customerEmail = userDoc?.email || payload.email || "";
+
     // Save pending Order in MongoDB
     const newOrder = await Order.create({
       userId: payload.id,
       items: orderItems,
+      subtotal: totalAmount,
+      shippingFee: 0,
+      discountAmount: 0,
       totalAmount: totalAmount,
+      paymentMethod: "Razorpay",
+      paymentStatus: "Pending",
+      orderStatus: "Pending",
+      customerDetails: {
+        name: customerName,
+        email: customerEmail,
+        phone: "+91 98765 43210",
+      },
+      shippingAddress: {
+        recipientName: customerName,
+        phone: "+91 98765 43210",
+        address: "123 Main Street, Sector 4",
+        city: "Mumbai",
+        state: "Maharashtra",
+        postalCode: "400001",
+      },
       razorpayOrderId: razorpayOrder.id,
       status: "pending",
     });
