@@ -4,414 +4,181 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import axiosInstance from "@/lib/axios";
 import { useRouter } from "next/navigation";
-import { useDispatch, useSelector } from "react-redux";
-import { Users, Package } from "lucide-react";
+import { useSelector, useDispatch } from "react-redux";
+import { RootState } from "@/lib/store";
+import { fetchCurrentUser } from "@/lib/store/slices/authSlice";
 
-import { fetchProducts } from "@/lib/store/slices/productSlice";
+import {
+  RevenueProfitChart,
+  SalesBarChart,
+  OrderStatusDonutChart,
+} from "@/components/admin/DashboardCharts";
 
-interface Stats {
-  totalUsers: number;
-  totalProducts: number;
-}
+import {
+  HeroBanner,
+  KpiCards,
+  BestSellersWidget,
+  LowStockAlertWidget,
+  RecentOrdersWidget,
+  RecentCustomersWidget,
+  QuickActionsWidget,
+} from "@/components/admin/DashboardWidgets";
 
-interface User {
-  _id: string;
-  name: string;
-  email: string;
-  role: string;
-  createdAt: string;
-}
+import { RefreshCw, AlertTriangle } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 export default function AdminDashboardPage() {
   const router = useRouter();
   const dispatch = useDispatch<any>();
+  const { user } = useSelector((state: RootState) => state.auth);
 
-  const [stats, setStats] = useState<Stats>({
-    totalUsers: 0,
-    totalProducts: 0,
-  });
-
-  const [users, setUsers] = useState<User[]>([]);
+  const [period, setPeriod] = useState("30d");
+  const [dashboardData, setDashboardData] = useState<any>(null);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
-  const { products } = useSelector(
-    (state: any) => state.products
-  );
-
-  // Admin check
-
+  // Admin Check
   useEffect(() => {
-
     const checkAdmin = async () => {
-
       try {
-
         const res = await axios.get("/api/auth/me");
-
         if (!res.data.success) {
           router.push("/login");
           return;
         }
-
         if (res.data.user.role !== "admin") {
           router.push("/");
         }
-
       } catch {
-
         router.push("/login");
-
       }
-
     };
-
     checkAdmin();
-
   }, [router]);
 
-  // Fetch dashboard data
-
+  // Fetch Current User
   useEffect(() => {
-
-    fetchDashboard();
-
-    dispatch(fetchProducts());
-
-  }, [dispatch]);
-
-  const fetchDashboard = async () => {
-
-    try {
-
-      const [statsRes, usersRes] = await Promise.all([
-        axiosInstance.get("/api/admin/stats"),
-        axiosInstance.get("/api/users"),
-      ]);
-
-      if (statsRes.data.success) {
-        setStats(statsRes.data.data);
-      }
-
-      if (usersRes.data.success) {
-        setUsers(usersRes.data.data);
-      }
-
-    } catch (error) {
-
-      console.error(error);
-
-    } finally {
-
-      setLoading(false);
-
+    if (!user) {
+      dispatch(fetchCurrentUser());
     }
+  }, [user, dispatch]);
 
+  // Fetch Dashboard Data on Period Change
+  const fetchDashboardData = async (selectedPeriod: string = period) => {
+    setLoading(true);
+    setError(null);
+    try {
+      const res = await axiosInstance.get(
+        `/api/admin/dashboard?period=${selectedPeriod}`
+      );
+      if (res.data.success) {
+        setDashboardData(res.data.data);
+      } else {
+        setError(res.data.message || "Failed to load dashboard statistics");
+      }
+    } catch (err: any) {
+      console.error("Dashboard fetch error:", err);
+      setError(
+        err.response?.data?.message ||
+          "Failed to connect to admin dashboard service."
+      );
+    } finally {
+      setLoading(false);
+    }
   };
 
-  if (loading) {
+  useEffect(() => {
+    fetchDashboardData(period);
+  }, [period]);
 
+  // Skeleton Loading State
+  if (loading && !dashboardData) {
     return (
-
-      <main className="max-w-7xl mx-auto px-6 py-10">
-
-        <p>Loading...</p>
-
-      </main>
-
+      <div className="space-y-8 animate-pulse p-2">
+        <div className="h-40 bg-muted/60 rounded-3xl" />
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          {[...Array(8)].map((_, i) => (
+            <div key={i} className="h-32 bg-muted/60 rounded-3xl" />
+          ))}
+        </div>
+        <div className="h-80 bg-muted/60 rounded-3xl" />
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+          <div className="h-72 bg-muted/60 rounded-3xl" />
+          <div className="h-72 bg-muted/60 rounded-3xl" />
+        </div>
+      </div>
     );
-
   }
 
+  // Error State
+  if (error && !dashboardData) {
+    return (
+      <div className="bg-card border border-destructive/30 rounded-3xl p-8 text-center space-y-4 max-w-md mx-auto my-12">
+        <AlertTriangle className="w-12 h-12 text-destructive mx-auto" />
+        <h2 className="text-lg font-bold text-foreground">Unable to load Dashboard</h2>
+        <p className="text-xs text-muted-foreground">{error}</p>
+        <Button onClick={() => fetchDashboardData(period)} className="gap-2 rounded-2xl">
+          <RefreshCw className="w-4 h-4" />
+          <span>Retry Loading</span>
+        </Button>
+      </div>
+    );
+  }
+
+  const {
+    metrics,
+    timeSeriesData,
+    orderStatusDistribution,
+    bestSellers,
+    lowStockProducts,
+    recentOrders,
+    recentCustomers,
+  } = dashboardData || {};
+
   return (
+    <div className="space-y-8 pb-12">
+      {/* Hero Overview Banner */}
+      <HeroBanner user={user} />
 
-    <main className="max-w-7xl mx-auto px-6 py-10 space-y-8">
+      {/* KPI Cards Grid */}
+      {metrics && <KpiCards metrics={metrics} />}
 
-      {/* Stats Cards */}
+      {/* Quick Actions Bar */}
+      <QuickActionsWidget />
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+      {/* Large Revenue & Profit Line Chart */}
+      <RevenueProfitChart
+        data={timeSeriesData || []}
+        period={period}
+        onPeriodChange={(newPeriod) => setPeriod(newPeriod)}
+      />
 
-        <div className="group relative overflow-hidden bg-card rounded-2xl border p-8 hover:scale-[1.02] hover:shadow-2xl">
+      {/* Two Column Layout for Supporting Analytics & Widgets */}
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+        {/* Left Column (7 cols on desktop) */}
+        <div className="lg:col-span-7 space-y-8">
+          {/* Sales Volume Bar Chart */}
+          <SalesBarChart data={timeSeriesData || []} />
 
-          <div className="flex justify-between items-start">
+          {/* Best Selling Products */}
+          <BestSellersWidget bestSellers={bestSellers || []} />
 
-            <div>
-
-              <p>
-                Total Users
-              </p>
-
-              <h2 className="text-5xl font-bold mt-4">
-                {stats.totalUsers}
-              </h2>
-
-              <p className="mt-4 text-sm">
-                Registered users
-              </p>
-
-            </div>
-
-
-            <div className="mt-2 bg-muted/20 p-4 rounded-2xl">
-
-              <Users size={34} />
-
-            </div>
-
-          </div>
-
+          {/* Recent Customer Orders */}
+          <RecentOrdersWidget orders={recentOrders || []} />
         </div>
 
+        {/* Right Column (5 cols on desktop) */}
+        <div className="lg:col-span-5 space-y-8">
+          {/* Order Status Donut Chart */}
+          <OrderStatusDonutChart distribution={orderStatusDistribution || {}} />
 
-        
+          {/* Low Stock Alerts */}
+          <LowStockAlertWidget lowStock={lowStockProducts || []} />
 
-        <div className="group relative overflow-hidden bg-card rounded-2xl border p-8 hover:scale-[1.02] hover:shadow-2xl">
-
-          <div className="flex justify-between items-start">
-
-            <div>
-
-              <p>
-                Total Products
-              </p>
-
-              <h2 className="text-5xl font-bold mt-4">
-                {stats.totalProducts}
-              </h2>
-
-              <p className="mt-4 text-sm text-purple-100">
-                Available products
-              </p>
-
-            </div>
-
-
-            <div className="mt-2 bg-muted/20 p-4 rounded-2xl">
-
-              <Package size={34} />
-
-            </div>
-
-          </div>
-
+          {/* Recent Customer Registrations */}
+          <RecentCustomersWidget customers={recentCustomers || []} />
         </div>
-
       </div>
-
-
-      {/* Tables */}
-
-      <div className="grid grid-cols-1 xl:grid-cols-10 gap-6">
-
-        {/* Products */}
-
-        <div className="xl:col-span-7">
-
-          <div className="rounded-2xl border overflow-hidden bg-card shadow-sm">
-
-            <div className="px-6 py-5 border-b">
-
-              <h2 className="text-2xl font-semibold">
-
-                Products
-
-              </h2>
-
-            </div>
-
-
-            <div className="overflow-x-auto">
-
-              <table className="w-full">
-
-                <thead>
-
-                  <tr className="border-b bg-muted/50">
-
-                    <th className="text-left p-4">
-                      Image
-                    </th>
-
-                    <th className="text-left p-4">
-                      Title
-                    </th>
-
-                    <th className="text-left p-4">
-                      Price
-                    </th>
-
-                    <th className="text-left p-4">
-                      Brand
-                    </th>
-
-                    <th className="text-left p-4">
-                      Stock
-                    </th>
-
-                  </tr>
-
-                </thead>
-
-                <tbody>
-
-                  {products.map((product: any) => (
-
-                    <tr
-                      key={product._id}
-                      className="border-b hover:bg-muted/30 transition"
-                    >
-
-                      <td className="p-4">
-
-                        <img
-                          src={product.image}
-                          alt={product.title}
-                          className="w-14 h-14 rounded-lg object-cover"
-                        />
-
-                      </td>
-
-                      <td className="p-4 font-medium">
-
-                        {product.title}
-
-                      </td>
-
-                      <td className="p-4">
-
-                        ₹{product.price}
-
-                      </td>
-
-                      <td className="p-4">
-
-                        {product.brand}
-
-                      </td>
-
-                      <td className="p-4">
-
-                        {product.stock}
-
-                      </td>
-
-                    </tr>
-
-                  ))}
-
-                </tbody>
-
-              </table>
-
-            </div>
-
-          </div>
-
-        </div>
-
-
-        {/* Users */}
-
-        <div className="xl:col-span-3">
-
-          <div className="rounded-2xl border overflow-hidden bg-card shadow-sm h-full">
-
-            <div className="px-6 py-5 border-b">
-
-              <h2 className="text-2xl font-semibold">
-
-                Users
-
-              </h2>
-
-            </div>
-
-
-            <div className="overflow-y-auto max-h-[700px]">
-
-              <table className="w-full">
-
-                <thead>
-
-                  <tr className="border-b bg-muted/50">
-
-                    <th className="text-left p-4">
-
-                      User
-
-                    </th>
-
-                    <th className="text-left p-4">
-
-                      Role
-
-                    </th>
-
-                  </tr>
-
-                </thead>
-
-                <tbody>
-
-                  {users.map((user) => (
-
-                    <tr
-                      key={user._id}
-                      className="border-b hover:bg-muted/30 transition"
-                    >
-
-                      <td className="p-4">
-
-                        <div>
-
-                          <p className="font-medium">
-
-                            {user.name}
-
-                          </p>
-
-                          <p className="text-sm text-muted-foreground truncate">
-
-                            {user.email}
-
-                          </p>
-
-                        </div>
-
-                      </td>
-
-                      <td className="p-4">
-
-                        <span
-                          className={`text-sm px-2 py-1 rounded-md ${user.role === "admin"
-                              ? "bg-black text-white"
-                              : "bg-muted"
-                            }`}
-                        >
-
-                          {user.role}
-
-                        </span>
-
-                      </td>
-
-                    </tr>
-
-                  ))}
-
-                </tbody>
-
-              </table>
-
-            </div>
-
-          </div>
-
-        </div>
-
-      </div>
-
-    </main>
-
+    </div>
   );
-
 }
