@@ -39,6 +39,7 @@ export default function ProductCard({ product }: ProductCardProps) {
             await dispatch(
                 addToCart({ productId: product._id, quantity: 1 })
             ).unwrap();
+            router.push("/cart");
         } catch (error) {
             console.error("Error adding to cart:", error);
         } finally {

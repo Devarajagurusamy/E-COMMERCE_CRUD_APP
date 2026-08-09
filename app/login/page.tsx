@@ -35,7 +35,11 @@ export default function LoginPage() {
       if (response.data.success) {
         // Store user in Redux
         dispatch(setUser(response.data.user));
-        window.location.href = "/";
+        if (response.data.user?.role === "admin") {
+          window.location.href = "/admin/dashboard";
+        } else {
+          window.location.href = "/";
+        }
       }
     } catch (error: any) {
       const message =
