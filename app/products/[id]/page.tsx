@@ -11,7 +11,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import Image from "next/image";
 import Link from "next/link";
 import ProductSkeleton from "@/components/ProductSkeleton";
-import axiosInstance from "@/lib/axios";
+import { processCheckout } from "@/lib/utils/checkout";
 import { CreditCard, Loader2 } from "lucide-react";
 
 export default function ProductDetailPage() {
@@ -57,30 +57,6 @@ export default function ProductDetailPage() {
     }
   };
 
-  const loadRazorpayScript = (): Promise<boolean> => {
-    return new Promise((resolve) => {
-      if ((window as any).Razorpay) {
-        resolve(true);
-        return;
-      }
-      const script = document.createElement("script");
-      script.src = "https://checkout.razorpay.com/v1/checkout.js";
-      script.onload = () => resolve(true);
-      script.onerror = () => resolve(false);
-      document.body.appendChild(script);
-    });
-  };
-
-  const handleCancelOrder = async (razorpayOrderId: string) => {
-    try {
-      await axiosInstance.post("/api/checkout/cancel", {
-        razorpay_order_id: razorpayOrderId,
-      });
-    } catch (err) {
-      console.error("Failed to update cancelled order status:", err);
-    }
-  };
-
   const handleProceedToCheckout = async () => {
     if (!isAuthenticated) {
       router.push("/login");
@@ -94,79 +70,13 @@ export default function ProductDetailPage() {
       // 1. Add current item to cart first
       await dispatch(addToCart({ productId: product!._id, quantity: 1 })).unwrap();
 
-      // 2. Create order on server
-      const { data } = await axiosInstance.post("/api/checkout/create-order");
-
-      if (!data.success) {
-        setCheckoutError(data.message || "Failed to initiate order");
-        setIsCheckingOut(false);
-        return;
-      }
-
-      // 3. Load Razorpay script
-      const isLoaded = await loadRazorpayScript();
-      if (!isLoaded) {
-        setCheckoutError("Razorpay SDK failed to load. Are you online?");
-        setIsCheckingOut(false);
-        return;
-      }
-
-      // 4. Open Razorpay Modal Window
-      const options = {
-        key: data.key,
-        amount: data.amount,
-        currency: data.currency,
-        name: "E-Commerce Clothing Store",
-        description: "Purchase Checkout",
-        order_id: data.razorpayOrderId,
-        handler: async function (response: any) {
-          try {
-            const verifyRes = await axiosInstance.post("/api/checkout/verify", {
-              razorpay_order_id: response.razorpay_order_id,
-              razorpay_payment_id: response.razorpay_payment_id,
-              razorpay_signature: response.razorpay_signature,
-            });
-
-            if (verifyRes.data.success) {
-              dispatch(fetchCart());
-              router.push(`/orders/success?orderId=${verifyRes.data.orderId}`);
-            } else {
-              setCheckoutError(
-                verifyRes.data.message || "Payment verification failed"
-              );
-              await handleCancelOrder(data.razorpayOrderId);
-            }
-          } catch (err: any) {
-            setCheckoutError(
-              err.response?.data?.message || "Error verifying payment signature"
-            );
-            await handleCancelOrder(data.razorpayOrderId);
-          } finally {
-            setIsCheckingOut(false);
-          }
-        },
-        modal: {
-          ondismiss: async function () {
-            setIsCheckingOut(false);
-            await handleCancelOrder(data.razorpayOrderId);
-          },
-        },
-        theme: {
-          color: "#18181b",
-        },
-      };
-
-      const razorpayWindow = new (window as any).Razorpay(options);
-
-      razorpayWindow.on("payment.failed", async function (response: any) {
-        setCheckoutError(
-          response.error?.description || "Payment failed or cancelled."
-        );
-        await handleCancelOrder(data.razorpayOrderId);
-        setIsCheckingOut(false);
+      // 2. Process checkout with shared utility
+      await processCheckout({
+        dispatch,
+        router,
+        setIsCheckingOut,
+        setCheckoutError,
       });
-
-      razorpayWindow.open();
     } catch (error: any) {
       console.error("Checkout Error:", error);
       setCheckoutError(
