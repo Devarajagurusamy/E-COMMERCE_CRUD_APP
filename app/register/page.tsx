@@ -7,10 +7,13 @@ import { registerSchema, type RegisterFormData } from "@/lib/schemas/registerSch
 import axiosInstance from "@/lib/axios";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import { useDispatch } from "react-redux";
+import { setUser } from "@/lib/store/slices/authSlice";
 import { Button } from "@/components/ui/button";
 
 export default function RegisterPage() {
   const router = useRouter();
+  const dispatch = useDispatch();
   const [isLoading, setIsLoading] = useState(false);
   const [apiError, setApiError] = useState<string | null>(null);
 
@@ -30,7 +33,13 @@ export default function RegisterPage() {
       const response = await axiosInstance.post("/api/auth/register", data);
 
       if (response.data.success) {
-        router.push("/");
+        // Store user in Redux and auto login
+        dispatch(setUser(response.data.user));
+        if (response.data.user?.role === "admin") {
+          window.location.href = "/admin/dashboard";
+        } else {
+          window.location.href = "/";
+        }
       }
     } catch (error: any) {
       const message =

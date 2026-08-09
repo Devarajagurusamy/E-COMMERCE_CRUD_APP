@@ -208,7 +208,7 @@ export default function AdminProductsPage() {
                       onClick={() =>
                         router.push(`/admin/products/${product._id}/edit`)
                       }
-                      className="px-3 py-1 border rounded hover:bg-gray-100"
+                      className="px-3 py-1 border rounded hover:bg-white hover:text-black"
                     >
                       Edit
                     </button>
