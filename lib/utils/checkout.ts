@@ -7,6 +7,21 @@ export interface ProcessCheckoutOptions {
   router: { push: (url: string) => void };
   setIsCheckingOut: (loading: boolean) => void;
   setCheckoutError: (error: string | null) => void;
+  checkoutPayload?: {
+    customerDetails?: {
+      name?: string;
+      email?: string;
+      phone?: string;
+    };
+    shippingAddress?: {
+      recipientName?: string;
+      phone?: string;
+      address?: string;
+      city?: string;
+      state?: string;
+      postalCode?: string;
+    };
+  };
 }
 
 export const loadRazorpayScript = (): Promise<boolean> => {
@@ -38,13 +53,17 @@ export const processCheckout = async ({
   router,
   setIsCheckingOut,
   setCheckoutError,
+  checkoutPayload,
 }: ProcessCheckoutOptions) => {
   setCheckoutError(null);
   setIsCheckingOut(true);
 
   try {
-    // 1. Create order on server
-    const { data } = await axiosInstance.post("/api/checkout/create-order");
+    // 1. Create order on server (passing custom details if provided)
+    const { data } = await axiosInstance.post(
+      "/api/checkout/create-order",
+      checkoutPayload || {}
+    );
 
     if (!data.success) {
       setCheckoutError(data.message || "Failed to initiate order");

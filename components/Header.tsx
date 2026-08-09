@@ -103,6 +103,17 @@ export default function Header() {
                         ) : (
 
                             <>
+                                <Link href="/orders">
+                                    <Button variant="ghost" size="sm">
+                                        My Orders
+                                    </Button>
+                                </Link>
+
+                                <Link href="/profile">
+                                    <Button variant="ghost" size="sm">
+                                        Profile
+                                    </Button>
+                                </Link>
 
                                 {user?.role === "admin" && (
 
@@ -213,6 +224,29 @@ export default function Header() {
                         ) : (
 
                             <>
+                                <Link
+                                    href="/orders"
+                                    onClick={() => setOpen(false)}
+                                >
+                                    <Button
+                                        variant="ghost"
+                                        className="w-full justify-start"
+                                    >
+                                        My Orders
+                                    </Button>
+                                </Link>
+
+                                <Link
+                                    href="/profile"
+                                    onClick={() => setOpen(false)}
+                                >
+                                    <Button
+                                        variant="ghost"
+                                        className="w-full justify-start"
+                                    >
+                                        Profile
+                                    </Button>
+                                </Link>
 
                                 {user?.role === "admin" && (
 

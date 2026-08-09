@@ -26,12 +26,7 @@ export default function CartSummary({
     const [checkoutError, setCheckoutError] = useState<string | null>(null);
 
     const handleCheckout = () => {
-        processCheckout({
-            dispatch,
-            router,
-            setIsCheckingOut,
-            setCheckoutError,
-        });
+        router.push("/checkout");
     };
 
     return (

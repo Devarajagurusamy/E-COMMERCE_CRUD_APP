@@ -91,10 +91,37 @@ export async function POST(request: NextRequest) {
 
     const razorpayOrder = await razorpay.orders.create(options);
 
+    let reqBody: any = {};
+    try {
+      reqBody = await request.json();
+    } catch {
+      // Body may be empty if called without body
+    }
+
     // Find User Details for customer snapshot
     const userDoc = await User.findById(payload.id);
-    const customerName = userDoc?.name || payload.email?.split("@")[0] || "Customer";
-    const customerEmail = userDoc?.email || payload.email || "";
+    const customerName =
+      reqBody?.customerDetails?.name ||
+      userDoc?.name ||
+      payload.email?.split("@")[0] ||
+      "Customer";
+    const customerEmail =
+      reqBody?.customerDetails?.email || userDoc?.email || payload.email || "";
+    const customerPhone =
+      reqBody?.customerDetails?.phone || userDoc?.phone || "+91 98765 43210";
+
+    const shippingRecipient =
+      reqBody?.shippingAddress?.recipientName || customerName;
+    const shippingPhone =
+      reqBody?.shippingAddress?.phone || customerPhone;
+    const shippingAddressLine =
+      reqBody?.shippingAddress?.address ||
+      reqBody?.shippingAddress?.addressLine ||
+      "123 Main Street, Sector 4";
+    const shippingCity = reqBody?.shippingAddress?.city || "Mumbai";
+    const shippingState = reqBody?.shippingAddress?.state || "Maharashtra";
+    const shippingPostalCode =
+      reqBody?.shippingAddress?.postalCode || "400001";
 
     // Save pending Order in MongoDB
     const newOrder = await Order.create({
@@ -110,15 +137,15 @@ export async function POST(request: NextRequest) {
       customerDetails: {
         name: customerName,
         email: customerEmail,
-        phone: "+91 98765 43210",
+        phone: customerPhone,
       },
       shippingAddress: {
-        recipientName: customerName,
-        phone: "+91 98765 43210",
-        address: "123 Main Street, Sector 4",
-        city: "Mumbai",
-        state: "Maharashtra",
-        postalCode: "400001",
+        recipientName: shippingRecipient,
+        phone: shippingPhone,
+        address: shippingAddressLine,
+        city: shippingCity,
+        state: shippingState,
+        postalCode: shippingPostalCode,
       },
       razorpayOrderId: razorpayOrder.id,
       status: "pending",
