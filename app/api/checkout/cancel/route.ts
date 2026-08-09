@@ -33,10 +33,12 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Find pending order and mark it as failed/cancelled
+    // Find pending order and mark payment status as Failed and order status as Cancelled
     const order = await Order.findOne({ razorpayOrderId: razorpay_order_id });
-    if (order && order.status === "pending") {
+    if (order && (order.status === "pending" || order.paymentStatus === "Pending")) {
       order.status = "failed";
+      order.paymentStatus = "Failed";
+      order.orderStatus = "Cancelled";
       await order.save();
     }
 

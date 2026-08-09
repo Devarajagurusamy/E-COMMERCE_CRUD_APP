@@ -26,6 +26,22 @@ export async function GET(request: NextRequest) {
       );
     }
 
+    // Auto-correct any legacy database records where status is 'failed' but paymentStatus/orderStatus are 'Pending'
+    await Order.updateMany(
+      {
+        $or: [
+          { status: "failed", paymentStatus: "Pending" },
+          { status: "failed", orderStatus: "Pending" },
+        ],
+      },
+      {
+        $set: {
+          paymentStatus: "Failed",
+          orderStatus: "Cancelled",
+        },
+      }
+    );
+
     // Extract query parameters
     const { searchParams } = new URL(request.url);
     const search = searchParams.get("search")?.trim() || "";
@@ -40,8 +56,12 @@ export async function GET(request: NextRequest) {
 
     // Filter by Order Status
     if (orderStatus !== "all") {
-      filter.$or = filter.$or || [];
-      filter.orderStatus = orderStatus;
+      if (orderStatus === "Cancelled") {
+        filter.$or = filter.$or || [];
+        filter.$or.push({ orderStatus: "Cancelled" }, { status: "failed" });
+      } else {
+        filter.orderStatus = orderStatus;
+      }
     }
 
     // Filter by Payment Status
@@ -51,11 +71,17 @@ export async function GET(request: NextRequest) {
         filter.$and.push({
           $or: [{ paymentStatus: "Paid" }, { status: "paid" }],
         });
+      } else if (paymentStatus === "Failed") {
+        filter.$and = filter.$and || [];
+        filter.$and.push({
+          $or: [{ paymentStatus: "Failed" }, { status: "failed" }],
+        });
       } else if (paymentStatus === "Pending") {
         filter.$and = filter.$and || [];
         filter.$and.push({
           $or: [{ paymentStatus: "Pending" }, { status: "pending" }],
         });
+        filter.status = { $ne: "failed" };
       } else {
         filter.paymentStatus = paymentStatus;
       }
@@ -92,25 +118,25 @@ export async function GET(request: NextRequest) {
         order.shippingAddress?.phone ||
         "N/A";
 
-      // Derive normalized order status if missing in legacy records
+      // Derive normalized order status if missing or mismatched
       let derivedOrderStatus = order.orderStatus;
-      if (!derivedOrderStatus) {
+      if (order.status === "failed" || derivedOrderStatus === "Pending" && order.status === "failed") {
+        derivedOrderStatus = "Cancelled";
+      } else if (!derivedOrderStatus) {
         if (order.status === "paid") {
           derivedOrderStatus = "Confirmed";
-        } else if (order.status === "failed") {
-          derivedOrderStatus = "Cancelled";
         } else {
           derivedOrderStatus = "Pending";
         }
       }
 
-      // Derive normalized payment status if missing in legacy records
+      // Derive normalized payment status if missing or mismatched
       let derivedPaymentStatus = order.paymentStatus;
-      if (!derivedPaymentStatus) {
+      if (order.status === "failed" || (derivedPaymentStatus === "Pending" && order.status === "failed")) {
+        derivedPaymentStatus = "Failed";
+      } else if (!derivedPaymentStatus) {
         if (order.status === "paid") {
           derivedPaymentStatus = "Paid";
-        } else if (order.status === "failed") {
-          derivedPaymentStatus = "Failed";
         } else {
           derivedPaymentStatus = "Pending";
         }
@@ -155,7 +181,7 @@ export async function GET(request: NextRequest) {
       });
     }
 
-    // Calculate Overview Statistics
+    // Calculate Overview Statistics accurately
     const allOrdersRaw = await Order.find().lean();
     const stats = {
       totalOrders: allOrdersRaw.length,
@@ -169,9 +195,13 @@ export async function GET(request: NextRequest) {
     };
 
     allOrdersRaw.forEach((ord: any) => {
-      const status =
-        ord.orderStatus ||
-        (ord.status === "paid" ? "Confirmed" : ord.status === "failed" ? "Cancelled" : "Pending");
+      let status = ord.orderStatus;
+
+      if (ord.status === "failed" || ord.paymentStatus === "Failed") {
+        status = "Cancelled";
+      } else if (!status) {
+        status = ord.status === "paid" ? "Confirmed" : "Pending";
+      }
 
       if (status === "Pending") stats.pendingOrders++;
       else if (status === "Confirmed") stats.confirmedOrders++;

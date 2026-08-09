@@ -86,6 +86,7 @@ export async function POST(request: NextRequest) {
       // Update order status to failed
       order.status = "failed";
       order.paymentStatus = "Failed";
+      order.orderStatus = "Cancelled";
       await order.save();
 
       return NextResponse.json(
