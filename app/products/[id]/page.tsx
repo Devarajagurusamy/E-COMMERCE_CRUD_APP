@@ -11,7 +11,6 @@ import { Card, CardContent } from "@/components/ui/card";
 import Image from "next/image";
 import Link from "next/link";
 import ProductSkeleton from "@/components/ProductSkeleton";
-import { processCheckout } from "@/lib/utils/checkout";
 import { CreditCard, Loader2 } from "lucide-react";
 
 export default function ProductDetailPage() {
@@ -67,16 +66,11 @@ export default function ProductDetailPage() {
     setIsCheckingOut(true);
 
     try {
-      // 1. Add current item to cart first
+      // 1. Add current item to cart
       await dispatch(addToCart({ productId: product!._id, quantity: 1 })).unwrap();
 
-      // 2. Process checkout with shared utility
-      await processCheckout({
-        dispatch,
-        router,
-        setIsCheckingOut,
-        setCheckoutError,
-      });
+      // 2. Redirect to Payment Confirmation Page (/checkout)
+      router.push("/checkout");
     } catch (error: any) {
       console.error("Checkout Error:", error);
       setCheckoutError(
