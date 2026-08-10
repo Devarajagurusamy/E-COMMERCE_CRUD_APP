@@ -217,7 +217,7 @@ export default function MyOrdersPage() {
                         </div>
 
                         <div className="text-right">
-                          <p className="font-extrabold text-sm text-foreground">
+                          <p className="font-bold text-sm text-foreground">
                             ₹{item.price * item.quantity}
                           </p>
                         </div>
@@ -231,7 +231,7 @@ export default function MyOrdersPage() {
                       <p className="text-xs text-muted-foreground">
                         Total {totalQuantity} Item{totalQuantity !== 1 ? "s" : ""}
                       </p>
-                      <p className="text-xl font-extrabold text-foreground">
+                      <p className="text-xl font-bold text-foreground">
                         ₹{order.totalAmount}
                       </p>
                     </div>

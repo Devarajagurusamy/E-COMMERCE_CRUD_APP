@@ -285,7 +285,7 @@ export default function AdminOrderDetailPage({
 
         <div className="text-left md:text-right">
           <p className="text-xs text-muted-foreground">Total Order Amount</p>
-          <p className="text-3xl font-extrabold text-foreground">
+          <p className="text-3xl font-bold text-foreground">
             ₹{order.totalAmount}
           </p>
         </div>
@@ -294,11 +294,10 @@ export default function AdminOrderDetailPage({
       {/* Notification Message */}
       {message && (
         <div
-          className={`p-4 rounded-xl border text-sm font-medium ${
-            message.type === "success"
+          className={`p-4 rounded-xl border text-sm font-medium ${message.type === "success"
               ? "bg-emerald-500/10 border-emerald-500/30 text-emerald-600"
               : "bg-destructive/10 border-destructive/30 text-destructive"
-          }`}
+            }`}
         >
           {message.text}
         </div>
@@ -327,22 +326,20 @@ export default function AdminOrderDetailPage({
                   className="relative z-10 flex flex-col items-center gap-1.5"
                 >
                   <div
-                    className={`w-9 h-9 rounded-full flex items-center justify-center font-bold text-xs transition-all ${
-                      isCompleted
+                    className={`w-9 h-9 rounded-full flex items-center justify-center font-bold text-xs transition-all ${isCompleted
                         ? "bg-primary text-primary-foreground shadow-md"
                         : "bg-muted text-muted-foreground border border-border"
-                    } ${isCurrent ? "ring-4 ring-primary/20" : ""}`}
+                      } ${isCurrent ? "ring-4 ring-primary/20" : ""}`}
                   >
                     {idx + 1}
                   </div>
                   <span
-                    className={`text-xs font-semibold ${
-                      isCurrent
+                    className={`text-xs font-semibold ${isCurrent
                         ? "text-primary"
                         : isCompleted
-                        ? "text-foreground"
-                        : "text-muted-foreground"
-                    }`}
+                          ? "text-foreground"
+                          : "text-muted-foreground"
+                      }`}
                   >
                     {flowStep}
                   </span>
@@ -531,7 +528,7 @@ export default function AdminOrderDetailPage({
                       {item.quantity}
                     </td>
 
-                    <td className="py-3 px-4 text-right font-extrabold text-foreground">
+                    <td className="py-3 px-4 text-right font-bold text-foreground">
                       ₹{item.price * item.quantity}
                     </td>
                   </tr>
@@ -618,7 +615,7 @@ export default function AdminOrderDetailPage({
 
             <div className="border-t border-border pt-3 flex justify-between items-center">
               <span className="font-bold text-base text-foreground">Final Total Amount:</span>
-              <span className="font-extrabold text-2xl text-foreground">
+              <span className="font-bold text-2xl text-foreground">
                 ₹{order.totalAmount}
               </span>
             </div>

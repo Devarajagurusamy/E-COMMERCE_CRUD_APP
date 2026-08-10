@@ -215,7 +215,7 @@ export default function CustomerOrderDetailPage({
 
         <div className="text-left md:text-right">
           <p className="text-xs text-muted-foreground">Total Order Amount</p>
-          <p className="text-3xl font-extrabold text-foreground">
+          <p className="text-3xl font-bold text-foreground">
             ₹{order.totalAmount}
           </p>
         </div>
@@ -243,22 +243,20 @@ export default function CustomerOrderDetailPage({
                   className="relative z-10 flex flex-col items-center gap-1.5"
                 >
                   <div
-                    className={`w-8 h-8 rounded-full flex items-center justify-center font-bold text-xs transition-all ${
-                      isCompleted
+                    className={`w-8 h-8 rounded-full flex items-center justify-center font-bold text-xs transition-all ${isCompleted
                         ? "bg-primary text-primary-foreground shadow-md"
                         : "bg-muted text-muted-foreground border border-border"
-                    } ${isCurrent ? "ring-4 ring-primary/20" : ""}`}
+                      } ${isCurrent ? "ring-4 ring-primary/20" : ""}`}
                   >
                     {idx + 1}
                   </div>
                   <span
-                    className={`text-[11px] font-semibold hidden sm:inline ${
-                      isCurrent
+                    className={`text-[11px] font-semibold hidden sm:inline ${isCurrent
                         ? "text-primary"
                         : isCompleted
-                        ? "text-foreground"
-                        : "text-muted-foreground"
-                    }`}
+                          ? "text-foreground"
+                          : "text-muted-foreground"
+                      }`}
                   >
                     {flowStep}
                   </span>
@@ -397,7 +395,7 @@ export default function CustomerOrderDetailPage({
                       {item.quantity}
                     </td>
 
-                    <td className="py-3 px-4 text-right font-extrabold text-foreground">
+                    <td className="py-3 px-4 text-right font-bold text-foreground">
                       ₹{item.price * item.quantity}
                     </td>
                   </tr>
@@ -484,7 +482,7 @@ export default function CustomerOrderDetailPage({
 
             <div className="border-t border-border pt-3 flex justify-between items-center">
               <span className="font-bold text-base text-foreground">Final Total:</span>
-              <span className="font-extrabold text-2xl text-foreground">
+              <span className="font-bold text-2xl text-foreground">
                 ₹{order.totalAmount}
               </span>
             </div>

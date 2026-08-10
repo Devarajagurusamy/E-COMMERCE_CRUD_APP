@@ -5,9 +5,9 @@ import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "@/lib/store";
 import { fetchProducts } from "@/lib/store/slices/productSlice";
 import ProductGrid from "@/components/ProductGrid";
-import ProductSkeleton from "@/components/ProductSkeleton";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
+import ProductCardSkeleton from "./ProductCardSkeleton";
 
 export default function NewArrivalsSection() {
   const dispatch = useDispatch<AppDispatch>();
@@ -82,7 +82,7 @@ export default function NewArrivalsSection() {
       {/* Section Header */}
       <div className="flex items-center justify-between mb-8">
         <div>
-          <h2 className="text-2xl sm:text-3xl font-extrabold text-foreground tracking-tight">
+          <h2 className="text-2xl sm:text-3xl font-bold text-foreground tracking-tight">
             New Arrivals
           </h2>
           <p className="text-sm text-muted-foreground mt-1">
@@ -103,7 +103,7 @@ export default function NewArrivalsSection() {
       {loading && products.length === 0 ? (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
           {[1, 2, 3, 4].map((n) => (
-            <ProductSkeleton key={n} />
+            <ProductCardSkeleton key={n} />
           ))}
         </div>
       ) : (

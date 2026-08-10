@@ -62,7 +62,7 @@ export default function CategorySection() {
       {/* Section Header */}
       <div className="flex items-center justify-between mb-8">
         <div>
-          <h2 className="text-2xl sm:text-3xl font-extrabold text-foreground tracking-tight">
+          <h2 className="text-2xl sm:text-3xl font-bold text-foreground tracking-tight">
             Shop by Categories
           </h2>
           <p className="text-sm text-muted-foreground mt-1">

@@ -62,10 +62,10 @@ export default function TestimonialSection() {
     <section id="reviews" className="py-16 overflow-hidden bg-muted/40 border-y border-border scroll-mt-20">
       {/* Section Header */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center mb-12">
-        <span className="text-xs font-extrabold uppercase tracking-widest text-muted-foreground block mb-2">
+        <span className="text-xs font-bold uppercase tracking-widest text-muted-foreground block mb-2">
           Customer Reviews
         </span>
-        <h2 className="text-2xl sm:text-4xl font-extrabold text-foreground tracking-tight">
+        <h2 className="text-2xl sm:text-4xl font-bold text-foreground tracking-tight">
           Loved by 10,000+ Customers Worldwide
         </h2>
         <p className="text-sm text-muted-foreground mt-2 max-w-lg mx-auto">

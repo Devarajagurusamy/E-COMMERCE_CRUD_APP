@@ -24,12 +24,12 @@ export default function Hero() {
       {/* Hero Content */}
       <div className="relative z-10 max-w-2xl text-left space-y-4 sm:space-y-6 w-full">
         {/* Category Tag */}
-        <p className="text-zinc-600 font-extrabold text-xs sm:text-sm tracking-widest uppercase">
+        <p className="text-zinc-600 font-bold text-xs sm:text-sm tracking-widest uppercase">
           TRENDING NOW
         </p>
 
         {/* Headline */}
-        <h1 className="text-3xl sm:text-6xl lg:text-7xl font-extrabold text-black tracking-tight leading-[1.15] sm:leading-[1.1]">
+        <h1 className="text-2xl sm:text-6xl lg:text-7xl font-bold text-black tracking-tight leading-[1.15] sm:leading-[1.1]">
           Discover Products<br className="hidden sm:inline" /> You’ll Love
         </h1>
 

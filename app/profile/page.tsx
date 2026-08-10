@@ -651,11 +651,10 @@ export default function ProfilePage() {
                   {addresses.map((addr) => (
                     <div
                       key={addr._id}
-                      className={`p-4 rounded-xl border relative flex flex-col justify-between transition-all ${
-                        addr.isDefault
+                      className={`p-4 rounded-xl border relative flex flex-col justify-between transition-all ${addr.isDefault
                           ? "border-primary bg-primary/5"
                           : "border-border bg-card"
-                      }`}
+                        }`}
                     >
                       <div>
                         <div className="flex items-center justify-between gap-2 mb-1.5">
@@ -780,7 +779,7 @@ export default function ProfilePage() {
                         <div className="flex items-center justify-between sm:justify-end gap-4">
                           <div className="text-left sm:text-right">
                             <p className="text-xs text-muted-foreground">Total</p>
-                            <p className="font-extrabold text-foreground text-base">
+                            <p className="font-bold text-foreground text-base">
                               ₹{ord.totalAmount}
                             </p>
                           </div>

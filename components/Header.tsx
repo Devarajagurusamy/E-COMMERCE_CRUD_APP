@@ -72,7 +72,7 @@ export default function Header() {
                             <div className="p-1.5 rounded-lg bg-primary/10 text-primary flex items-center justify-center">
                                 <ShoppingBag className="h-5 w-5" />
                             </div>
-                            <span className="font-extrabold tracking-tight">EComm</span>
+                            <span className="font-bold tracking-tight">EComm</span>
                         </Link>
                     </div>
 
@@ -85,8 +85,8 @@ export default function Header() {
                                     key={link.href}
                                     href={link.href}
                                     className={`relative px-3 py-2 text-sm font-medium transition-colors duration-200 ${active
-                                            ? "text-foreground font-semibold"
-                                            : "text-muted-foreground hover:text-foreground"
+                                        ? "text-foreground font-semibold"
+                                        : "text-muted-foreground hover:text-foreground"
                                         }`}
                                 >
                                     {link.label}
@@ -169,8 +169,8 @@ export default function Header() {
                                     href={link.href}
                                     onClick={() => setOpen(false)}
                                     className={`px-3 py-2.5 rounded-md text-base font-medium transition-colors ${active
-                                            ? "bg-primary/10 text-primary font-semibold"
-                                            : "text-foreground hover:bg-muted"
+                                        ? "bg-primary/10 text-primary font-semibold"
+                                        : "text-foreground hover:bg-muted"
                                         }`}
                                 >
                                     {link.label}

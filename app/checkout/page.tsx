@@ -313,7 +313,7 @@ export default function PaymentConfirmationPage() {
                       </div>
 
                       <div className="text-right">
-                        <p className="font-extrabold text-sm text-foreground">
+                        <p className="font-bold text-sm text-foreground">
                           ₹{lineTotal}
                         </p>
                       </div>
@@ -522,11 +522,10 @@ export default function PaymentConfirmationPage() {
                       <div
                         key={addr._id}
                         onClick={() => setSelectedAddressId(addr._id)}
-                        className={`p-3.5 rounded-xl border cursor-pointer transition-all ${
-                          isSelected
+                        className={`p-3.5 rounded-xl border cursor-pointer transition-all ${isSelected
                             ? "border-primary bg-primary/5 ring-2 ring-primary/20"
                             : "border-border bg-card hover:border-muted-foreground/30"
-                        }`}
+                          }`}
                       >
                         <div className="flex items-center justify-between mb-1">
                           <span className="font-bold text-xs text-foreground">
@@ -578,7 +577,7 @@ export default function PaymentConfirmationPage() {
                 </div>
                 <div className="border-t border-border pt-3 flex justify-between items-center text-sm">
                   <span className="font-bold text-foreground">Final Payable Amount:</span>
-                  <span className="font-extrabold text-2xl text-foreground">
+                  <span className="font-bold text-2xl text-foreground">
                     ₹{finalPayable}
                   </span>
                 </div>

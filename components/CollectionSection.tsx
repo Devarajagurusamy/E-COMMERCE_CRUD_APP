@@ -38,7 +38,7 @@ export default function CollectionSection() {
   return (
     <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-8">
-        
+
         {/* Card 1: Flash Sale */}
         <div className="relative rounded-3xl overflow-hidden bg-gradient-to-r from-orange-600 via-red-500 to-rose-600 text-white p-8 sm:p-10 flex flex-col justify-between min-h-[320px] shadow-lg group">
           {/* Decorative Glow */}
@@ -46,12 +46,12 @@ export default function CollectionSection() {
 
           {/* Top content */}
           <div className="relative z-10 space-y-4 max-w-xs">
-            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-extrabold bg-white/20 backdrop-blur-md tracking-wider uppercase">
+            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-white/20 backdrop-blur-md tracking-wider uppercase">
               <Zap className="h-3.5 w-3.5 fill-current" />
               Flash Sale
             </span>
 
-            <h3 className="text-3xl sm:text-4xl font-extrabold tracking-tight leading-tight">
+            <h3 className="text-3xl sm:text-4xl font-bold tracking-tight leading-tight">
               Up To 70% Off
             </h3>
 
@@ -107,12 +107,12 @@ export default function CollectionSection() {
 
           {/* Top content */}
           <div className="relative z-10 space-y-4 max-w-xs">
-            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-extrabold bg-zinc-800 text-zinc-300 tracking-wider uppercase border border-zinc-700">
+            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-zinc-800 text-zinc-300 tracking-wider uppercase border border-zinc-700">
               <Flame className="h-3.5 w-3.5 text-orange-500" />
               New Collection
             </span>
 
-            <h3 className="text-3xl sm:text-4xl font-extrabold tracking-tight leading-tight">
+            <h3 className="text-3xl sm:text-4xl font-bold tracking-tight leading-tight">
               Summer 2025
             </h3>
 
