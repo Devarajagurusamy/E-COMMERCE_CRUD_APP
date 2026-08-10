@@ -11,8 +11,16 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "E-Commerce Clothes App",
-  description: "A full-stack e-commerce application for clothes shopping",
+  title: "EComm | Clothes & Fashion Store",
+  description: "A premium full-stack e-commerce application for clothing and fashion",
+  icons: {
+    icon: [
+      { url: "/icon.svg", type: "image/svg+xml" },
+      { url: "/favicon.svg", type: "image/svg+xml" },
+    ],
+    shortcut: "/icon.svg",
+    apple: "/icon.svg",
+  },
 };
 
 export default function RootLayout({
