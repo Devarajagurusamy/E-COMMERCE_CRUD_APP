@@ -48,14 +48,14 @@ export default function ProductCard({ product }: ProductCardProps) {
     };
 
     return (
-        <Card className="h-full flex flex-col overflow-hidden hover:shadow-lg transition-shadow">
+        <Card className="group h-full flex flex-col overflow-hidden hover:shadow-xl hover:-translate-y-1 transition-all duration-300 ease-out">
             {/* Product Image */}
             <CardHeader className="p-0 relative h-48 overflow-hidden bg-muted">
                 <Image
                     src={product.image}
                     alt={product.title}
                     fill
-                    className="object-cover w-full h-full"
+                    className="object-cover w-full h-full group-hover:scale-105 transition-transform duration-500 ease-out"
                     sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                 />
                 {/* Discount Badge */}

@@ -14,8 +14,10 @@ export default function NewArrivalsSection() {
   const { products, loading } = useSelector((state: RootState) => state.products);
 
   useEffect(() => {
-    dispatch(fetchProducts());
-  }, [dispatch]);
+    if (products.length === 0) {
+      dispatch(fetchProducts());
+    }
+  }, [dispatch, products.length]);
 
   // Fallback sample products if API returns empty array initially
   const sampleProducts = [

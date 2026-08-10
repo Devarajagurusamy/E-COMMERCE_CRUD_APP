@@ -126,45 +126,59 @@
   *::-webkit-scrollbar {
     display: none;
   }
-  body {
-    @apply bg-background text-foreground;
-  }
   html {
     @apply font-sans;
+    scroll-behavior: smooth;
+  }
+  body {
+    @apply bg-background text-foreground antialiased selection:bg-primary selection:text-primary-foreground;
   }
 }
 
 @layer components {
   .btn-primary {
-    @apply inline-flex items-center justify-center px-4 py-2 rounded-md bg-primary text-primary-foreground font-medium hover:bg-primary/90 transition-colors;
+    @apply inline-flex items-center justify-center px-4 py-2 rounded-md bg-primary text-primary-foreground font-medium hover:bg-primary/90 active:scale-[0.98] transition-all duration-200;
   }
 
   .page-container {
     @apply max-w-7xl mx-auto px-4 py-8;
+    animation: fadeIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
   }
 
   .card-container {
-    @apply bg-card text-card-foreground rounded-lg border border-border p-6 shadow-sm;
+    @apply bg-card text-card-foreground rounded-lg border border-border p-6 shadow-sm hover:shadow-md transition-all duration-300;
   }
 
   .input-field {
-    @apply w-full px-3 py-2 border border-input rounded-md bg-background text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring;
+    @apply w-full px-3 py-2 border border-input rounded-md bg-background text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring transition-shadow duration-200;
   }
 
   .section-title {
     @apply text-3xl font-bold tracking-tight text-foreground mb-6;
   }
 
-  /* Endless Loop Marquee Animation */
+  /* Smooth Fade-in Animation */
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .animate-fade-in {
+    animation: fadeIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  }
+
+  /* Endless Loop Marquee Animation with GPU acceleration */
   @keyframes marquee {
-    0% { transform: translateX(0%); }
-    100% { transform: translateX(-50%); }
+    0% { transform: translate3d(0, 0, 0); }
+    100% { transform: translate3d(-50%, 0, 0); }
   }
 
   .animate-marquee {
     display: flex;
     width: max-content;
     animation: marquee 35s linear infinite;
+    will-change: transform;
+    transform: translateZ(0);
   }
 
   .animate-marquee:hover {

@@ -16,6 +16,8 @@ export default function Hero() {
       <img
         src="/hero-bg.png"
         alt="Hero background"
+        decoding="async"
+        fetchPriority="high"
         className="absolute right-0 top-0 bottom-0 h-full w-auto max-w-full lg:max-w-none object-contain object-right z-0 pointer-events-none opacity-40 sm:opacity-100"
       />
 
@@ -103,6 +105,8 @@ export default function Hero() {
                 key={idx}
                 src={url}
                 alt={`Customer ${idx + 1}`}
+                loading="lazy"
+                decoding="async"
                 className="inline-block h-8 w-8 sm:h-9 sm:w-9 rounded-full ring-2 ring-white object-cover shadow-sm"
               />
             ))}

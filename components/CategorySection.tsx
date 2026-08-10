@@ -92,7 +92,9 @@ export default function CategorySection() {
               <img
                 src={cat.image}
                 alt={cat.name}
-                className="h-full w-full object-cover group-hover:scale-108 transition-transform duration-500"
+                loading="lazy"
+                decoding="async"
+                className="h-full w-full object-cover group-hover:scale-108 transition-transform duration-500 ease-out"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-80 group-hover:opacity-90 transition-opacity" />
 

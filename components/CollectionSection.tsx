@@ -93,7 +93,9 @@ export default function CollectionSection() {
             <img
               src="https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=800&auto=format&fit=crop&q=80"
               alt="Flash Sale Shoe"
-              className="h-full w-full object-cover object-center group-hover:scale-105 transition-transform duration-700 opacity-90 lg:opacity-100"
+              loading="lazy"
+              decoding="async"
+              className="h-full w-full object-cover object-center group-hover:scale-105 transition-transform duration-700 ease-out opacity-90 lg:opacity-100"
             />
           </div>
         </div>
@@ -134,7 +136,9 @@ export default function CollectionSection() {
             <img
               src="https://images.unsplash.com/photo-1517838277536-f5f99be501cd?w=800&auto=format&fit=crop&q=80"
               alt="Summer Collection Model"
-              className="h-full w-full object-cover object-top group-hover:scale-105 transition-transform duration-700 opacity-80 group-hover:opacity-100"
+              loading="lazy"
+              decoding="async"
+              className="h-full w-full object-cover object-top group-hover:scale-105 transition-transform duration-700 ease-out opacity-80 group-hover:opacity-100"
             />
             <div className="absolute inset-0 bg-gradient-to-r from-zinc-950 via-zinc-950/40 to-transparent" />
           </div>

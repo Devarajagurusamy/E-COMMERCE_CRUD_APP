@@ -37,8 +37,10 @@ export default function ProductsPage() {
   const [mobileFilterOpen, setMobileFilterOpen] = useState(false);
 
   useEffect(() => {
-    dispatch(fetchProducts());
-  }, [dispatch]);
+    if (products.length === 0) {
+      dispatch(fetchProducts());
+    }
+  }, [dispatch, products.length]);
 
   // Extract available types, brands, sizes, max price dynamically
   const { clothTypes, brands, sizes, maxAvailablePrice } = useMemo(() => {

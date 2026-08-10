@@ -104,6 +104,8 @@ export default function TestimonialSection() {
                 <img
                   src={t.avatar}
                   alt={t.name}
+                  loading="lazy"
+                  decoding="async"
                   className="h-10 w-10 rounded-full object-cover ring-2 ring-border"
                 />
                 <div>
