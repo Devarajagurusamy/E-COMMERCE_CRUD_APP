@@ -40,11 +40,11 @@ const navLinks = [
     href: "/admin/products",
     icon: Package,
   },
-  {
-    name: "Users",
-    href: "/admin/users",
-    icon: Users,
-  },
+  // {
+  //   name: "Users",
+  //   href: "/admin/users",
+  //   icon: Users,
+  // },
   {
     name: "Customers",
     href: "/admin/customers",
