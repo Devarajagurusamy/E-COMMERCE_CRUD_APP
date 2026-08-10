@@ -71,6 +71,11 @@ export default function Hero() {
                 bg-white
                 hover:bg-zinc-100
                 text-black
+                hover:text-black
+                dark:bg-white
+                dark:text-black
+                dark:hover:bg-zinc-200
+                dark:hover:text-black
                 border
                 border-zinc-300
                 font-semibold

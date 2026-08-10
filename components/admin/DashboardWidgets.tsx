@@ -59,7 +59,7 @@ export function HeroBanner({ user }: { user: any }) {
             </Button>
           </Link>
           <Link href="/admin/orders">
-            <Button size="sm" variant="outline" className="border-zinc-700 text-white hover:bg-zinc-900 font-semibold gap-2 rounded-2xl">
+            <Button size="sm" variant="outline" className="border-zinc-700 bg-zinc-900 text-white hover:bg-zinc-800 hover:text-white font-semibold gap-2 rounded-2xl">
               <ShoppingBag className="w-4 h-4" />
               <span>Manage Orders</span>
             </Button>
