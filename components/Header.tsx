@@ -40,7 +40,9 @@ export default function Header() {
 
     const navLinks = [
         { label: "Home", href: "/" },
+        { label: "Categories", href: "/#categories" },
         { label: "Products", href: "/products" },
+        { label: "Reviews", href: "/#reviews" },
         ...(isAuthenticated
             ? [
                 { label: "My Orders", href: "/orders" },
@@ -52,6 +54,7 @@ export default function Header() {
     ];
 
     const isActive = (href: string) => {
+        if (href.includes("#")) return false;
         if (href === "/") return pathname === "/";
         return pathname?.startsWith(href);
     };
@@ -74,7 +77,7 @@ export default function Header() {
                     </div>
 
                     {/* Centered Desktop Navigation */}
-                    <nav className="hidden md:flex items-center justify-center space-x-1 lg:space-x-4 flex-1 max-w-xl">
+                    <nav className="hidden md:flex items-center justify-center space-x-1 lg:space-x-3 flex-1 max-w-2xl">
                         {navLinks.map((link) => {
                             const active = isActive(link.href);
                             return (

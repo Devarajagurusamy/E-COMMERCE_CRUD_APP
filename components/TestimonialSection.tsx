@@ -59,7 +59,7 @@ export default function TestimonialSection() {
   const loopList = [...testimonials, ...testimonials];
 
   return (
-    <section className="py-16 overflow-hidden bg-muted/40 border-y border-border">
+    <section id="reviews" className="py-16 overflow-hidden bg-muted/40 border-y border-border scroll-mt-20">
       {/* Section Header */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center mb-12">
         <span className="text-xs font-extrabold uppercase tracking-widest text-muted-foreground block mb-2">
