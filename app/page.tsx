@@ -1,71 +1,10 @@
-import { Button } from "@/components/ui/button";
-import Link from "next/link";
+import Hero from "@/components/Hero";
 
 export default function Home() {
   return (
     <main className="min-h-screen bg-background text-foreground">
-
       {/* HERO SECTION */}
-      <section className="relative min-h-[70vh] sm:min-h-[80vh] flex items-center justify-center overflow-hidden">
-
-        {/* Background */}
-        <div className="absolute inset-0">
-          <img
-            src="https://images.unsplash.com/photo-1618354691373-d851c5c3a990?q=80&w=2000&auto=format&fit=crop"
-            alt="Refined clothing texture"
-            className="h-full w-full object-cover"
-          />
-
-          <div className="absolute inset-0 bg-black/50" />
-        </div>
-
-        {/* Content */}
-        <div className="relative z-10 px-6 text-center max-w-3xl">
-
-          <h1 className="
-            text-3xl
-            sm:text-5xl
-            md:text-6xl
-            font-serif
-            text-white
-            leading-tight
-          ">
-            Welcome to E-Commerce
-          </h1>
-
-          <p className="
-            mt-4
-            text-sm
-            sm:text-base
-            text-stone-200
-            max-w-md
-            sm:max-w-lg
-            mx-auto
-          ">
-            Discover our curated collection of refined clothing items
-          </p>
-
-          <Link href="/products">
-            <Button
-              className="
-                mt-8
-                px-6 py-5
-                sm:px-8 sm:py-6
-                text-xs
-                uppercase
-                tracking-[0.2em]
-                rounded-sm
-                bg-white
-                text-black
-                hover:bg-stone-100
-              "
-            >
-              Discover Style
-            </Button>
-          </Link>
-
-        </div>
-      </section>
+      <Hero />
 
       {/* FEATURE SECTION */}
       <section className="
