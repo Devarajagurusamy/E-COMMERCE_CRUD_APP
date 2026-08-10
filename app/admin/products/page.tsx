@@ -10,11 +10,12 @@ import {
 
 import { useRouter } from "next/navigation";
 import axios from "axios";
-
+import { useToast } from "@/components/ui/toast";
 
 export default function AdminProductsPage() {
   const dispatch = useDispatch<any>();
   const router = useRouter();
+  const { toast, confirm } = useToast();
 
   useEffect(() => {
 
@@ -55,19 +56,21 @@ export default function AdminProductsPage() {
     dispatch(fetchProducts());
   }, [dispatch]);
 
-  const handleDelete = async (id: string) => {
-    const confirmDelete = window.confirm(
-      "Are you sure you want to delete this product?"
-    );
-
-    if (!confirmDelete) return;
-
-    try {
-      await dispatch(deleteProduct(id)).unwrap();
-
-    } catch (error: any) {
-      alert(error || "Failed to delete product");
-    }
+  const handleDelete = (id: string, title?: string) => {
+    confirm({
+      title: "Delete Product?",
+      message: `Are you sure you want to delete "${title || "this product"}"? This action cannot be undone.`,
+      confirmText: "Delete",
+      variant: "destructive",
+      onConfirm: async () => {
+        try {
+          await dispatch(deleteProduct(id)).unwrap();
+          toast.success("Product deleted successfully");
+        } catch (error: any) {
+          toast.error(error || "Failed to delete product");
+        }
+      },
+    });
   };
 
   const filteredProducts = products.filter((product: any) => {

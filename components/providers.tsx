@@ -8,6 +8,7 @@ import { store } from "@/lib/store";
 import Header from "@/components/Header";
 import Footer from "./Footer";
 import { fetchCurrentUser } from "@/lib/store/slices/authSlice";
+import { ToastProvider } from "@/components/ui/toast";
 
 function AuthInitializer({
   children,
@@ -43,9 +44,11 @@ export function Providers({
 }) {
   return (
     <Provider store={store}>
-      <AuthInitializer>
-        <MainLayout>{children}</MainLayout>
-      </AuthInitializer>
+      <ToastProvider>
+        <AuthInitializer>
+          <MainLayout>{children}</MainLayout>
+        </AuthInitializer>
+      </ToastProvider>
     </Provider>
   );
 }

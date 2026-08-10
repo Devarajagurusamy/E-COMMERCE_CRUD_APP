@@ -8,10 +8,12 @@ import { createProduct } from "@/lib/store/slices/productSlice";
 
 import axios from "axios";
 
+import { useToast } from "@/components/ui/toast";
+
 export default function AddProductPage() {
     const router = useRouter();
-
     const dispatch = useDispatch<any>();
+    const { toast } = useToast();
 
     useEffect(() => {
         const checkAdmin = async () => {
@@ -72,11 +74,10 @@ export default function AddProductPage() {
                 createProduct(formData)
             ).unwrap();
 
-            alert("Product created successfully");
-
+            toast.success("Product created successfully");
             router.push("/admin/products");
         } catch (error: any) {
-            alert(error || "Failed to create product");
+            toast.error(error || "Failed to create product");
         }
     };
 

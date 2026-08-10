@@ -24,6 +24,7 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { useToast } from "@/components/ui/toast";
 
 interface UserProfile {
   _id: string;
@@ -60,6 +61,7 @@ interface OrderSummary {
 export default function ProfilePage() {
   const router = useRouter();
   const dispatch = useDispatch();
+  const { toast, confirm: confirmPopup } = useToast();
 
   const [user, setUser] = useState<UserProfile | null>(null);
   const [addresses, setAddresses] = useState<AddressItem[]>([]);
@@ -216,14 +218,22 @@ export default function ProfilePage() {
     }
   };
 
-  const handleDeleteAddress = async (addressId: string) => {
-    if (!confirm("Are you sure you want to delete this address?")) return;
-    try {
-      await axiosInstance.delete(`/api/user/addresses/${addressId}`);
-      fetchProfileData();
-    } catch (err) {
-      console.error("Delete address error:", err);
-    }
+  const handleDeleteAddress = (addressId: string) => {
+    confirmPopup({
+      title: "Delete Address?",
+      message: "Are you sure you want to delete this saved address?",
+      confirmText: "Delete",
+      variant: "destructive",
+      onConfirm: async () => {
+        try {
+          await axiosInstance.delete(`/api/user/addresses/${addressId}`);
+          toast.success("Address deleted successfully");
+          fetchProfileData();
+        } catch (err: any) {
+          toast.error("Failed to delete address");
+        }
+      },
+    });
   };
 
   const handleSetDefaultAddress = async (addr: AddressItem) => {

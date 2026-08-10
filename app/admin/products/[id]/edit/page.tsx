@@ -10,10 +10,12 @@ import {
 } from "@/lib/store/slices/productSlice";
 
 import axios from "axios";
+import { useToast } from "@/components/ui/toast";
 
 export default function EditProductPage() {
     const router = useRouter();
     const params = useParams();
+    const { toast } = useToast();
 
     const id = params.id as string;
 
@@ -114,11 +116,10 @@ export default function EditProductPage() {
                 })
             ).unwrap();
 
-            alert("Product updated successfully");
-
+            toast.success("Product updated successfully");
             router.push("/admin/products");
         } catch (error: any) {
-            alert(error || "Failed to update product");
+            toast.error(error || "Failed to update product");
         }
     };
 
