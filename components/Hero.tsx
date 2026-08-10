@@ -11,38 +11,40 @@ export default function Hero() {
   ];
 
   return (
-    <section className="relative min-h-[480px] sm:min-h-[540px] lg:min-h-[580px] flex items-center px-6 sm:px-12 lg:px-24 py-12 sm:py-16 overflow-hidden bg-[#f4f4f6]">
-      {/* Hero Background Image - Uncropped & Right Aligned */}
+    <section className="relative min-h-[360px] sm:min-h-[540px] lg:min-h-[580px] flex items-center px-5 sm:px-12 lg:px-24 py-8 sm:py-16 overflow-hidden bg-[#f4f4f6]">
+      {/* Hero Background Image - Hidden on mobile for clean text contrast */}
       <img
         src="/hero-bg.png"
         alt="Hero background"
         decoding="async"
         fetchPriority="high"
-        className="absolute right-0 top-0 bottom-0 h-full w-auto max-w-full lg:max-w-none object-contain object-right z-0 pointer-events-none opacity-40 sm:opacity-100"
+        className="hidden sm:block absolute right-0 top-0 bottom-0 h-full w-auto max-w-full lg:max-w-none object-contain object-right z-0 pointer-events-none opacity-100"
       />
 
       {/* Hero Content */}
-      <div className="relative z-10 max-w-2xl text-left space-y-6">
+      <div className="relative z-10 max-w-2xl text-left space-y-4 sm:space-y-6 w-full">
         {/* Category Tag */}
         <p className="text-zinc-600 font-extrabold text-xs sm:text-sm tracking-widest uppercase">
           TRENDING NOW
         </p>
 
         {/* Headline */}
-        <h1 className="text-4xl sm:text-6xl lg:text-7xl font-extrabold text-black tracking-tight leading-[1.1]">
-          Discover Products<br />You’ll Love
+        <h1 className="text-3xl sm:text-6xl lg:text-7xl font-extrabold text-black tracking-tight leading-[1.15] sm:leading-[1.1]">
+          Discover Products<br className="hidden sm:inline" /> You’ll Love
         </h1>
 
         {/* Description */}
-        <p className="text-base sm:text-lg text-zinc-700 font-medium leading-relaxed max-w-md">
+        <p className="text-sm sm:text-lg text-zinc-700 font-medium leading-relaxed max-w-md">
           Shop the latest trending products curated for modern lifestyles.
         </p>
 
         {/* Action Buttons */}
-        <div className="flex flex-wrap items-center gap-4 pt-2">
-          <Link href="/products">
+        <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 sm:gap-4 pt-2">
+          <Link href="/products" className="w-full sm:w-auto">
             <Button
               className="
+                w-full
+                sm:w-auto
                 bg-black
                 hover:bg-zinc-800
                 text-white
@@ -56,6 +58,7 @@ export default function Hero() {
                 duration-200
                 flex
                 items-center
+                justify-center
                 gap-2
                 text-sm
                 sm:text-base
@@ -66,10 +69,12 @@ export default function Hero() {
             </Button>
           </Link>
 
-          <Link href="/products">
+          <Link href="/products" className="w-full sm:w-auto">
             <Button
               variant="outline"
               className="
+                w-full
+                sm:w-auto
                 bg-white
                 hover:bg-zinc-100
                 text-black
@@ -97,8 +102,8 @@ export default function Hero() {
           </Link>
         </div>
 
-        {/* Social Proof */}
-        <div className="flex items-center gap-3 pt-6 sm:pt-8">
+        {/* Social Proof (Client Element) - Hidden on mobile view */}
+        <div className="hidden sm:flex items-center gap-3 pt-6 sm:pt-8">
           <div className="flex -space-x-2.5 overflow-hidden">
             {avatars.map((url, idx) => (
               <img
